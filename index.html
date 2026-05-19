@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus — Syed Asrar</title>
+  <meta name="description" content="AI tools, research technology, and web applications by Syed Asrar.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='url(%23g)'/><text x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='system-ui' font-weight='900' font-size='19' fill='white'>N</text><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%25' stop-color='%237c3aed'/><stop offset='100%25' stop-color='%233b82f6'/></linearGradient></defs></svg>" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:      #06060f;
+      --card:    rgba(255,255,255,0.04);
+      --border:  rgba(255,255,255,0.09);
+      --text:    #8892a4;
+      --text-h:  #e8ecf4;
+      --text-d:  #4e5768;
+      --purple:  #7c3aed;
+      --blue:    #3b82f6;
+      --teal:    #14b8a6;
+      --amber:   #f59e0b;
+      --grad:    linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%);
+      --r:       14px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Background ──────────────────────────────── */
+    .bg {
+      position: fixed; inset: 0;
+      z-index: 0; pointer-events: none; overflow: hidden;
+    }
+    .orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(130px); opacity: 0.12;
+    }
+    .orb-1 {
+      width: 900px; height: 900px;
+      background: radial-gradient(circle at center, #7c3aed 0%, transparent 60%);
+      top: -400px; left: -250px;
+      animation: fa 30s ease-in-out infinite;
+    }
+    .orb-2 {
+      width: 700px; height: 700px;
+      background: radial-gradient(circle at center, #2563eb 0%, transparent 60%);
+      bottom: -250px; right: -200px;
+      animation: fb 36s ease-in-out infinite;
+    }
+    .orb-3 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle at center, #a855f7 0%, transparent 60%);
+      top: 55%; left: 60%; opacity: 0.06;
+      animation: fc 45s ease-in-out infinite;
+    }
+    @keyframes fa { 0%,100%{transform:translate(0,0) scale(1)} 40%{transform:translate(80px,100px) scale(1.06)} 70%{transform:translate(-40px,50px) scale(0.95)} }
+    @keyframes fb { 0%,100%{transform:translate(0,0) scale(1)} 40%{transform:translate(-100px,-80px) scale(1.08)} 70%{transform:translate(50px,-60px) scale(0.96)} }
+    @keyframes fc { 0%,100%{transform:translate(-50%,-50%) scale(1)} 50%{transform:translate(-50%,-50%) scale(1.4)} }
+
+    .dots {
+      position: absolute; inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,0.055) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+
+    /* ── Layout ──────────────────────────────────── */
+    .wrap { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── Header ──────────────────────────────────── */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      border-bottom: 1px solid var(--border);
+      background: rgba(6,6,15,0.72);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+    }
+    .hdr {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 58px; max-width: 1100px; margin: 0 auto; padding: 0 24px;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-mark {
+      width: 30px; height: 30px; border-radius: 7px;
+      background: var(--grad);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 14px; color: #fff;
+      letter-spacing: -0.5px;
+    }
+    .logo-word { font-size: 15px; font-weight: 700; color: var(--text-h); letter-spacing: -0.3px; }
+    .logo-word em {
+      font-style: normal;
+      background: var(--grad);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .gh-btn {
+      display: flex; align-items: center; gap: 7px;
+      padding: 7px 15px; border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      font-size: 13px; font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s;
+      backdrop-filter: blur(12px);
+    }
+    .gh-btn:hover { border-color: rgba(255,255,255,0.2); color: var(--text-h); background: rgba(255,255,255,0.07); }
+
+    /* ── Hero ────────────────────────────────────── */
+    .hero { padding: 96px 0 72px; text-align: center; }
+
+    .hero-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 5px 14px; border-radius: 100px;
+      background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.28);
+      font-size: 11px; font-weight: 600; color: #b39dfc;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      margin-bottom: 22px;
+    }
+    .pulse {
+      width: 6px; height: 6px; border-radius: 50%; background: #a78bfa;
+      animation: pulse 2.2s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.65)} }
+
+    .hero-h {
+      font-size: clamp(44px, 6.5vw, 70px);
+      font-weight: 800; letter-spacing: -2.5px; line-height: 1.04;
+      color: var(--text-h); margin-bottom: 18px;
+    }
+    .hero-h span {
+      background: linear-gradient(135deg, #7c3aed 0%, #6366f1 40%, #3b82f6 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      animation: shine 5s linear infinite;
+    }
+    @keyframes shine { to { background-position: 200% center; } }
+
+    .hero-p {
+      font-size: 16px; color: var(--text);
+      max-width: 460px; margin: 0 auto 38px; line-height: 1.78;
+    }
+
+    .stats { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+    .stat {
+      display: flex; align-items: center; gap: 10px;
+      padding: 11px 20px; border-radius: 11px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      backdrop-filter: blur(12px);
+    }
+    .stat-n { font-size: 21px; font-weight: 800; color: var(--text-h); letter-spacing: -1px; line-height: 1; }
+    .stat-l { font-size: 12px; color: var(--text-d); font-weight: 500; }
+
+    /* ── Filter ──────────────────────────────────── */
+    .filter { padding-bottom: 28px; }
+    .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; }
+    .fb {
+      padding: 7px 16px; border-radius: 100px;
+      border: 1px solid var(--border);
+      background: transparent; color: var(--text);
+      font-size: 13px; font-weight: 500; cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+    .fb:hover { border-color: rgba(255,255,255,0.2); color: var(--text-h); }
+    .fb.active { background: var(--grad); border-color: transparent; color: #fff; }
+
+    /* ── Grid ────────────────────────────────────── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      padding-bottom: 90px;
+    }
+    @media (max-width: 900px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 540px) { .grid { grid-template-columns: 1fr; } }
+
+    /* ── Card ────────────────────────────────────── */
+    .card {
+      position: relative;
+      border-radius: var(--r);
+      border: 1px solid var(--border);
+      background: var(--card);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 20px;
+      display: flex; flex-direction: column; gap: 13px;
+      overflow: hidden;
+      transition:
+        transform 0.28s cubic-bezier(.17,.67,.3,1.15),
+        border-color 0.22s, box-shadow 0.28s,
+        opacity 0.45s ease, translate 0.45s ease;
+      opacity: 0;
+      translate: 0 20px;
+    }
+    .card.in { opacity: 1; translate: 0 0; }
+    .card.off { display: none; }
+
+    .card:hover {
+      transform: translateY(-6px) !important;
+      border-color: rgba(124,58,237,0.55);
+      box-shadow:
+        0 0 0 1px rgba(124,58,237,0.22),
+        0 22px 56px rgba(124,58,237,0.2),
+        0 6px 16px rgba(0,0,0,0.5);
+    }
+
+    /* top color stripe */
+    .stripe {
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    }
+    .sp { background: linear-gradient(90deg, #7c3aed, #a855f7); }
+    .sb { background: #3b82f6; }
+    .st { background: #14b8a6; }
+    .sa { background: linear-gradient(90deg, #f59e0b, #ef4444); }
+
+    .c-top {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 8px;
+    }
+    .c-ico { font-size: 24px; line-height: 1; }
+    .c-num {
+      font-size: 10px; font-weight: 600; color: var(--text-d);
+      padding: 2px 8px; border-radius: 100px;
+      border: 1px solid var(--border);
+    }
+
+    .c-title {
+      font-size: 17px; font-weight: 700; color: var(--text-h);
+      letter-spacing: -0.4px; line-height: 1.25;
+    }
+    .c-desc {
+      font-size: 13px; color: var(--text);
+      line-height: 1.68; flex: 1;
+    }
+
+    .c-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+    .tag {
+      font-size: 11px; font-weight: 500;
+      padding: 2px 9px; border-radius: 100px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.09);
+      color: var(--text);
+    }
+    .cat {
+      font-size: 11px; font-weight: 600;
+      padding: 2px 9px; border-radius: 100px;
+    }
+    .cp { background: rgba(124,58,237,0.16); color: #c084fc; }
+    .cb { background: rgba(59,130,246,0.16); color: #60a5fa; }
+    .ct { background: rgba(20,184,166,0.16); color: #2dd4bf; }
+    .ca { background: rgba(245,158,11,0.16); color: #fbbf24; }
+
+    .c-links { display: flex; gap: 8px; margin-top: 2px; }
+    .lnk {
+      flex: 1; display: flex; align-items: center;
+      justify-content: center; gap: 5px;
+      padding: 8px 12px; border-radius: 8px;
+      font-size: 13px; font-weight: 600;
+      text-decoration: none;
+      transition: all 0.18s; white-space: nowrap;
+    }
+    .lp { background: var(--grad); color: #fff; }
+    .lp:hover { opacity: 0.82; }
+    .lg { border: 1px solid var(--border); background: transparent; color: var(--text); }
+    .lg:hover { border-color: rgba(255,255,255,0.22); color: var(--text-h); background: rgba(255,255,255,0.05); }
+
+    /* ── Footer ──────────────────────────────────── */
+    footer {
+      position: relative; z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 22px 24px; text-align: center;
+    }
+    footer p { font-size: 13px; color: var(--text-d); }
+    footer a { color: var(--text); text-decoration: none; transition: color 0.18s; }
+    footer a:hover { color: var(--text-h); }
+
+    /* ── Scrollbar ───────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); }
+  </style>
+</head>
+<body>
+
+<!-- Background -->
+<div class="bg">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="dots"></div>
+</div>
+
+<!-- Header -->
+<header>
+  <div class="hdr">
+    <a class="logo" href="#">
+      <div class="logo-mark">N</div>
+      <span class="logo-word">ne<em>xus</em></span>
+    </a>
+    <a class="gh-btn" href="https://github.com/SyAhmedU" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+      </svg>
+      SyAhmedU
+    </a>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-pill"><span class="pulse"></span>Portfolio</div>
+    <h1 class="hero-h">Syed <span>Asrar</span></h1>
+    <p class="hero-p">AI tools, research technology, and web applications — built to solve real problems.</p>
+    <div class="stats">
+      <div class="stat">
+        <span class="stat-n">7</span>
+        <span class="stat-l">Projects</span>
+      </div>
+      <div class="stat">
+        <span class="stat-n">4</span>
+        <span class="stat-l">AI&#8209;powered</span>
+      </div>
+      <div class="stat">
+        <span class="stat-n">7</span>
+        <span class="stat-l">Live&nbsp;&amp;&nbsp;deployed</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filter -->
+  <div class="filter">
+    <div class="filter-bar">
+      <button class="fb active" data-f="all">All projects</button>
+      <button class="fb" data-f="ai">AI Tools</button>
+      <button class="fb" data-f="research">Research</button>
+      <button class="fb" data-f="web">Web Apps</button>
+      <button class="fb" data-f="education">Education</button>
+      <button class="fb" data-f="lifestyle">Lifestyle</button>
+    </div>
+  </div>
+
+  <!-- Grid -->
+  <div class="grid" id="grid">
+
+    <!-- ResearchFlow -->
+    <div class="card" data-cats="ai research">
+      <div class="stripe sp"></div>
+      <div class="c-top"><span class="c-ico">🔬</span><span class="c-num">#08</span></div>
+      <div class="c-title">ResearchFlow</div>
+      <div class="c-desc">AI-powered 10-stage wizard that walks researchers from raw idea to publication-ready methodology — question, theory, hypotheses, design, and full analysis plan.</div>
+      <div class="c-tags">
+        <span class="cat cp">AI Tool</span>
+        <span class="cat ct">Research</span>
+        <span class="tag">React</span>
+        <span class="tag">TypeScript</span>
+        <span class="tag">Gemini AI</span>
+        <span class="tag">Python</span>
+      </div>
+      <div class="c-links">
+        <a class="lnk lp" href="https://researchflow-alpha.vercel.app" target="_blank" rel="noopener">Open ↗</a>
+        <a class="lnk lg" href="https://github.com/SyAhmedU/researchflow" target="_blank" rel="noopener">Code</a>
+      </div>
+    </div>
+
+    <!-- KarmaMap -->
+    <div class="card" data-cats="ai">
+      <div class="stripe sp"></div>
+      <div class="c-top"><span class="c-ico">🗺️</span><span class="c-num">#03</span></div>
+      <div class="c-title">KarmaMap</div>
+      <div class="c-desc">Interactive D3 treemap visualising AI's impact on Indian job roles. Claude AI scores each role by growth rate, salary, exposure level, and future outlook.</div>
+      <div class="c-tags">
+        <span class="cat cp">AI Tool</span>
+        <span class="tag">React</span>
+        <span class="tag">D3.js</span>
+        <span class="tag">Claude AI</span>
+        <span class="tag">Express</span>
+      </div>
+      <div class="c-links">
+        <a class="lnk lp" href="https://karmamap-git-master-syahmedus-projects.vercel.app" target="_blank" rel="noopener">Open ↗</a>
+        <a class="lnk lg" href="https://github.com/SyAhmedU/karmamap" target="_blank" rel="noopener">Code</a>
+      </div>
+    </div>
+
+    <!-- WordMap -->
+    <div class="card" data-cats="ai research">
+      <div class="stripe st"></div>
+      <div class="c-top"><span class="c-ico">🌐</span><span class="c-num">#04</span></div>
+      <div class="c-title">WordMap</div>
+      <div class="c-desc">Research intelligence treemap for 106 social-science terms. Features Opportunity Scores, live OpenAlex paper &amp; author data, AI Brief, and a White Space Finder.</div>
+      <div class="c-tags">
+        <span class="cat ct">Research</span>
+        <span class="cat cp">AI Tool</span>
+        <span class="tag">D3.js</span>
+        <span class="tag">OpenAlex API</span>
+        <span class="tag">Claude AI</span>
+      </div>
+      <div class="c-links">
+        <a class="lnk lp" href="https://syahmedu.github.io/wordmap/" target="_blank" rel="noopener">Open ↗</a>
+        <a class="lnk lg" href="https://github.com/SyAhmedU/wordmap" target="_blank" rel="noopener">Code</a>
+      </div>
+    </div>
+
+    <!-- TaskFlow -->
+    <div class="card" data-cats="web">
+      <div class="stripe sb"></div>
+      <div class="c-top"><span class="c-ico">✅</span><span class="c-num">#01</span></div>
+      <div class="c-title">TaskFlow</div>
+      <div class="c-desc">Full-stack team task manager with JWT auth, role-based access for managers and mentors, and multi-assignee task workflows. Deployed on Railway.</div>
+      <div class="c-tags">
+        <span class="cat cb">Web App</span>
+        <span class="tag">React</span>
+        <span class="tag">Express</span>
+        <span class="tag">JWT Auth</span>
+        <span class="tag">Node.js</span>
+      </div>
+      <div class="c-links">
+        <a class="lnk lp" href="https://task-manager-production-5683.up.railway.app" target="_blank" rel="noopener">Open ↗</a>
+        <a class="lnk lg" href="https://github.com/SyAhmedU/task-manager" target="_blank" rel="noopener">Code</a>
+      </div>
+    </div>
+
+    <!-- JournalTime -->
+    <div class="card" data-cats="research">
+      <div class="stripe st"></div>
+      <div class="c-top"><span class="c-ico">📰</span><span class="c-num">#05</span></div>
+      <div class="c-title">JournalTime</div>
+      <div class="c-desc">Database of 200+ Scopus journals with real submission-to-decision turnaround times. Filter by research field, quartile, and processing speed to find your venue.</div>
+      <div class="c-tags">
+        <span class="cat ct">Research</span>
+        <span class="tag">D3.js</span>
+        <span class="tag">Vanilla JS</span>
+        <span class="tag">Scopus Data</span>
+      </div>
+      <div class="c-links">
+        <a class="lnk lp" href="https://syahmedu.github.io/journaltime" target="_blank" rel="noopener">Open ↗</a>
+        <a class="lnk lg" href="https://github.com/SyAhmedU/journaltime" target="_blank" rel="noopener">Code</a>
+      </div>
+    </div>
+
+    <!-- Timetable Generator -->
+    <div class="card" data-cats="education">
+      <div class="stripe sa"></div>
+      <div class="c-top"><span class="c-ico">📅</span><span class="c-num">#07</span></div>
+      <div class="c-title">Timetable Generator</div>
+      <div class="c-desc">Constraint-based academic timetable generator for 11 classes across 3 departments. Respects mentor availability, subject caps, and AY 2026–27 scheduling rules.</div>
+      <div class="c-tags">
+        <span class="cat ca">Education</span>
+        <span class="tag">Next.js</span>
+        <span class="tag">TypeScript</span>
+        <span class="tag">React 19</span>
+      </div>
+      <div class="c-links">
+        <a class="lnk lp" href="https://syahmedu.github.io/timetable-generator/" target="_blank" rel="noopener">Open ↗</a>
+        <a class="lnk lg" href="https://github.com/SyAhmedU/timetable-generator" target="_blank" rel="noopener">Code</a>
+      </div>
+    </div>
+
+    <!-- Bachelor Meal Plan -->
+    <div class="card" data-cats="lifestyle">
+      <div class="stripe sa"></div>
+      <div class="c-top"><span class="c-ico">🍳</span><span class="c-num">#06</span></div>
+      <div class="c-title">Bachelor Meal Plan</div>
+      <div class="c-desc">36 halal recipes with weekly meal planning, shopping list generation, and portion guidance. Mobile-first and fully offline via localStorage — no sign-up needed.</div>
+      <div class="c-tags">
+        <span class="cat ca">Lifestyle</span>
+        <span class="tag">Vanilla JS</span>
+        <span class="tag">localStorage</span>
+        <span class="tag">Mobile-first</span>
+      </div>
+      <div class="c-links">
+        <a class="lnk lp" href="https://syahmedu.github.io/bachelor-meal-plan/" target="_blank" rel="noopener">Open ↗</a>
+        <a class="lnk lg" href="https://github.com/SyAhmedU/bachelor-meal-plan" target="_blank" rel="noopener">Code</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <p>
+    Built by Syed Asrar &nbsp;·&nbsp;
+    <a href="mailto:asrarsaa@gmail.com">asrarsaa@gmail.com</a>
+    &nbsp;·&nbsp;
+    <a href="https://github.com/SyAhmedU" target="_blank" rel="noopener">github.com/SyAhmedU</a>
+  </p>
+</footer>
+
+<script>
+  // ── Filter ──────────────────────────────────────────────
+  const fBtns = document.querySelectorAll('.fb');
+  const cards = document.querySelectorAll('.card');
+
+  fBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      fBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.dataset.f;
+      cards.forEach(card => {
+        const cats = (card.dataset.cats || '').split(' ');
+        card.classList.toggle('off', f !== 'all' && !cats.includes(f));
+      });
+    });
+  });
+
+  // ── Scroll-in animation ─────────────────────────────────
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.07 });
+
+  cards.forEach((c, i) => {
+    c.style.transitionDelay = `${i * 60}ms`;
+    io.observe(c);
+  });
+
+  // Remove stagger delay after initial animation so filter is instant
+  setTimeout(() => {
+    cards.forEach(c => { c.style.transitionDelay = '0ms'; });
+  }, cards.length * 60 + 700);
+</script>
+
+</body>
+</html>
