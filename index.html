@@ -263,7 +263,35 @@
     .cb { background: rgba(59,130,246,0.16); color: #60a5fa; }
     .ct { background: rgba(20,184,166,0.16); color: #2dd4bf; }
     .ca { background: rgba(245,158,11,0.16); color: #fbbf24; }
-    .cg { background: rgba(148,163,184,0.14); color: #94a3b8; }
+    /* ── Artifacts section ───────────────────────────── */
+    .artifacts-section { padding-bottom: 90px; }
+    .artifacts-hdr {
+      display: flex; align-items: baseline; gap: 12px;
+      margin-bottom: 14px; padding-top: 8px;
+    }
+    .artifacts-title {
+      font-size: 11px; font-weight: 700; color: var(--text);
+      text-transform: uppercase; letter-spacing: 0.12em;
+    }
+    .artifacts-sub { font-size: 13px; color: var(--text-d); }
+    .artifacts-list { display: flex; flex-direction: column; gap: 10px; }
+    .a-card {
+      border-radius: var(--r); border: 1px solid var(--border);
+      background: var(--card); backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 16px 20px;
+      display: flex; align-items: center; gap: 16px;
+      transition: border-color 0.22s, box-shadow 0.22s;
+    }
+    .a-card:hover { border-color: rgba(148,163,184,0.28); box-shadow: 0 4px 16px rgba(0,0,0,0.25); }
+    .a-ico { font-size: 22px; flex-shrink: 0; }
+    .a-body { flex: 1; min-width: 0; }
+    .a-title { font-size: 15px; font-weight: 700; color: var(--text-h); letter-spacing: -0.3px; }
+    .a-desc { font-size: 13px; color: var(--text); line-height: 1.6; margin-top: 4px; }
+    .a-meta { display: flex; align-items: center; gap: 8px; margin-top: 9px; flex-wrap: wrap; }
+    .a-updated { font-size: 11px; font-weight: 500; color: var(--text-d); display: flex; align-items: center; gap: 5px; }
+    .live-dot { width: 5px; height: 5px; border-radius: 50%; background: #22c55e; animation: pulse 2.2s ease-in-out infinite; flex-shrink: 0; }
+    .a-actions { flex-shrink: 0; }
 
     .c-links { display: flex; gap: 8px; margin-top: 2px; }
     .lnk {
@@ -331,15 +359,15 @@
     <p class="hero-p">AI tools, research technology, and web applications — built to solve real problems.</p>
     <div class="stats">
       <div class="stat">
-        <span class="stat-n">9</span>
+        <span class="stat-n">8</span>
         <span class="stat-l">Projects</span>
       </div>
       <div class="stat">
-        <span class="stat-n">5</span>
+        <span class="stat-n">4</span>
         <span class="stat-l">AI&#8209;powered</span>
       </div>
       <div class="stat">
-        <span class="stat-n">9</span>
+        <span class="stat-n">8</span>
         <span class="stat-l">Live&nbsp;&amp;&nbsp;deployed</span>
       </div>
     </div>
@@ -491,23 +519,6 @@
       </div>
     </div>
 
-    <!-- IO Psychology Tracker -->
-    <div class="card" data-cats="ai research">
-      <div class="stripe sp"></div>
-      <div class="c-top"><span class="c-ico">📚</span><span class="c-num">artifact</span></div>
-      <div class="c-title">IO Psychology Tracker</div>
-      <div class="c-desc">26 recent papers (Feb–May 2026) from Journal of Applied Psychology, Personnel Psychology, and J. Organizational Behavior. Search, filter by journal, and expand for AI-generated key takeaways via Claude Desktop.</div>
-      <div class="c-tags">
-        <span class="cat cg">Artifact</span>
-        <span class="cat ct">Research</span>
-        <span class="tag">Claude AI</span>
-        <span class="tag">Vanilla JS</span>
-      </div>
-      <div class="c-links">
-        <a class="lnk lp" href="io_psych_tracker.html" target="_blank" rel="noopener">Open ↗</a>
-      </div>
-    </div>
-
     <!-- Bachelor Meal Plan -->
     <div class="card" data-cats="lifestyle">
       <div class="stripe sa"></div>
@@ -527,6 +538,34 @@
     </div>
 
   </div>
+
+  <!-- Artifacts -->
+  <div class="artifacts-section">
+    <div class="artifacts-hdr">
+      <span class="artifacts-title">Artifacts</span>
+      <span class="artifacts-sub">Living documents &amp; one-off tools that get updated over time</span>
+    </div>
+    <div class="artifacts-list">
+
+      <div class="a-card">
+        <span class="a-ico">📚</span>
+        <div class="a-body">
+          <div class="a-title">IO Psychology Research Tracker</div>
+          <div class="a-desc">26 papers from Journal of Applied Psychology, Personnel Psychology, and J. Organizational Behavior (Feb–May 2026). Filter by journal, search by keyword, and expand for Claude AI–generated key takeaways.</div>
+          <div class="a-meta">
+            <span class="tag">Claude AI</span>
+            <span class="tag">Vanilla JS</span>
+            <span class="a-updated"><span class="live-dot"></span>Updated May 2026</span>
+          </div>
+        </div>
+        <div class="a-actions">
+          <a class="lnk lp" href="io_psych_tracker.html" target="_blank" rel="noopener" style="width:auto">Open ↗</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
 </div>
 
 <!-- Footer -->
