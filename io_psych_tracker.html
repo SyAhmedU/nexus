@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>IO Psychology & Management Research Tracker</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f7f8fc; color: #1a1d2e; min-height: 100vh; }
+
+  /* Header */
+  .header { background: linear-gradient(135deg, #1e3a5f 0%, #2d5fa1 100%); color: white; padding: 24px 28px 20px; }
+  .header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+  .header p { font-size: 13px; opacity: 0.8; margin-top: 4px; }
+  .header-meta { display: flex; align-items: center; gap: 16px; margin-top: 14px; flex-wrap: wrap; }
+  .badge { background: rgba(255,255,255,0.18); border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 500; }
+
+  /* Controls */
+  .controls { background: white; padding: 16px 28px; border-bottom: 1px solid #e8eaf0; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .search-wrap { position: relative; flex: 1; min-width: 200px; }
+  .search-wrap input { width: 100%; padding: 9px 12px 9px 36px; border: 1.5px solid #dde1ec; border-radius: 8px; font-size: 14px; background: #f7f8fc; color: #1a1d2e; outline: none; transition: border-color 0.2s; }
+  .search-wrap input:focus { border-color: #2d5fa1; background: white; }
+  .search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: #8b92a9; font-size: 14px; }
+  .filter-group { display: flex; gap: 6px; flex-wrap: wrap; }
+  .filter-btn { padding: 7px 14px; border-radius: 20px; border: 1.5px solid #dde1ec; background: white; font-size: 13px; cursor: pointer; font-weight: 500; color: #5a6078; transition: all 0.15s; }
+  .filter-btn:hover { border-color: #2d5fa1; color: #2d5fa1; }
+  .filter-btn.active { background: #2d5fa1; border-color: #2d5fa1; color: white; }
+  .count-label { font-size: 13px; color: #8b92a9; white-space: nowrap; margin-left: auto; }
+
+  /* Papers grid */
+  .papers { padding: 20px 28px; display: flex; flex-direction: column; gap: 14px; }
+
+  /* Paper card */
+  .card { background: white; border-radius: 12px; border: 1.5px solid #e8eaf0; overflow: hidden; transition: box-shadow 0.2s, border-color 0.2s; }
+  .card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.09); border-color: #c8d0e8; }
+  .card-header { padding: 16px 18px 14px; cursor: pointer; }
+  .card-top { display: flex; align-items: flex-start; gap: 10px; }
+  .journal-badge { flex-shrink: 0; padding: 3px 9px; border-radius: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.3px; text-transform: uppercase; margin-top: 2px; }
+  .badge-JAP { background: #e8f0fb; color: #1a56b0; }
+  .badge-PersPsych { background: #fce8f3; color: #9b2c6e; }
+  .badge-JOB { background: #e8faf0; color: #1a7a4a; }
+  .card-title { font-size: 15px; font-weight: 600; color: #1a1d2e; line-height: 1.45; flex: 1; }
+  .card-authors { margin-top: 7px; font-size: 12.5px; color: #5a6078; }
+  .card-authors a { color: #2d5fa1; text-decoration: none; font-weight: 500; }
+  .card-authors a:hover { text-decoration: underline; }
+  .card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+  .card-year { font-size: 12px; color: #8b92a9; font-weight: 500; }
+  .expand-btn { font-size: 12px; color: #2d5fa1; font-weight: 500; display: flex; align-items: center; gap: 4px; }
+  .expand-arrow { transition: transform 0.2s; display: inline-block; }
+  .card.expanded .expand-arrow { transform: rotate(180deg); }
+
+  /* Card body */
+  .card-body { display: none; padding: 0 18px 18px; border-top: 1px solid #f0f2f8; }
+  .card.expanded .card-body { display: block; }
+  .section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #8b92a9; margin-top: 14px; margin-bottom: 6px; }
+  .abstract-text { font-size: 13.5px; color: #3a3f5a; line-height: 1.6; }
+  .findings-box { background: #f0f6ff; border-left: 3px solid #2d5fa1; border-radius: 0 8px 8px 0; padding: 10px 14px; font-size: 13.5px; color: #1a2a4a; line-height: 1.6; }
+  .findings-box.loading { color: #8b92a9; font-style: italic; }
+  .findings-box.error { background: #fff3f0; border-color: #e05a3a; color: #a02010; }
+  .links-row { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+  .link-btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none; transition: all 0.15s; border: 1.5px solid; }
+  .link-doi { background: #1a56b0; border-color: #1a56b0; color: white; }
+  .link-doi:hover { background: #1344a0; }
+  .link-scholar { background: white; border-color: #dde1ec; color: #3a3f5a; }
+  .link-scholar:hover { border-color: #2d5fa1; color: #2d5fa1; }
+
+  /* Empty state */
+  .empty { text-align: center; padding: 48px 24px; color: #8b92a9; }
+  .empty svg { opacity: 0.3; margin-bottom: 12px; }
+  .empty p { font-size: 15px; }
+
+  /* Footer */
+  .footer { text-align: center; padding: 20px; font-size: 12px; color: #8b92a9; border-top: 1px solid #e8eaf0; margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📚 IO Psychology &amp; Management Research Tracker</h1>
+  <p>Recent publications from benchmark journals in Industrial-Organizational Psychology &amp; Management</p>
+  <div class="header-meta">
+    <span class="badge">Feb – May 2026</span>
+    <span class="badge" id="total-badge">26 papers</span>
+    <span class="badge">JAP · Personnel Psychology · JOB</span>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="search-input" placeholder="Search by title, author, or keyword…" oninput="applyFilters()"/>
+  </div>
+  <div class="filter-group">
+    <button class="filter-btn active" data-journal="all" onclick="setFilter(this)">All</button>
+    <button class="filter-btn" data-journal="JAP" onclick="setFilter(this)">Journal of Applied Psychology</button>
+    <button class="filter-btn" data-journal="PersPsych" onclick="setFilter(this)">Personnel Psychology</button>
+    <button class="filter-btn" data-journal="JOB" onclick="setFilter(this)">J. Organizational Behavior</button>
+  </div>
+  <span class="count-label" id="count-label"></span>
+</div>
+
+<div class="papers" id="papers-container"></div>
+
+<div class="footer">
+  Last updated May 20, 2026 · Sources: PubMed, Wiley Online Library · Click any paper to expand details &amp; AI-generated key takeaways
+</div>
+
+<script>
+const PAPERS = [{"id": 1, "title": "Organizations espousing an authenticity ideology repel stigmatized job seekers", "authors": ["Du Katherine M", "Ponce de Leon Rebecca"], "journal": "Journal of Applied Psychology", "journal_short": "JAP", "year": "2026", "doi": "10.1037/apl0001392", "doi_url": "https://doi.org/10.1037/apl0001392", "abstract": "Authenticity has been promoted for millennia; the modern workplace is no exception. Organizations, too, may espouse an authenticity ideology-encouraging employees to \"be themselves\" to achieve success. The espousal of such an ideology might be intended to signal identity safety, particularly to stigmatized job seekers. Instead, however, we propose that an espoused authenticity ideology may ironically frustrate and repel those who experience the most stigma. Across six experiments, we find that stigma in professional settings increases the tendency to view adhering to an espoused authenticity ideology-that is, engaging in authentic behavior-as risky, which prompts frustration and undermines attraction toward organizations that promote such an ideology. Further evincing our theoretical model", "author_link": "https://scholar.google.com/scholar?q=Du+Katherine+M"}, {"id": 2, "title": "Understanding the intersection of gender and cognitive ability on interpersonal outcomes: A multistudy investigation", "authors": ["Chawla Nitya", "Spoelma Trevor M", "Kwon Seo-Hyun"], "journal": "Journal of Applied Psychology", "journal_short": "JAP", "year": "2026", "doi": "10.1037/apl0001391", "doi_url": "https://doi.org/10.1037/apl0001391", "abstract": "Drawing from social role theory and ideas tied to the implied communality deficit, we develop a theoretical model explicating that higher cognitive ability women-but not men-are potentially more likely to experience interpersonal detriments. Specifically, we theorize that as an agentic competence attribute, higher cognitive ability is viewed as a gender norm violation for women (but not for men), contributing to perceptions of both heightened interpersonal hostility and lowered communality by their peers; these perceptions, in turn, are theorized to be associated with greater levels of victimization and lower levels of received task- and person-focused help from teammates. Across two multisource studies comprised of 826 individuals nested within 140 work groups, utilizing objective cogniti", "author_link": "https://scholar.google.com/scholar?q=Chawla+Nitya"}, {"id": 3, "title": "From road to rage: Why commute demands are associated with interpersonal counterproductive work behaviors (and what to do about it)", "authors": ["Gale Jake", "Foulk Trevor A", "Erez Amir"], "journal": "Journal of Applied Psychology", "journal_short": "JAP", "year": "2026", "doi": "10.1037/apl0001394", "doi_url": "https://doi.org/10.1037/apl0001394", "abstract": "Previous literature on commute demands, or the presence of stressors during a commute, has largely concluded that affective processes do not account for the impact of commuting on employees' work behavior. In this article, we challenge this conclusion by showing that when the specific affective state aligned with the distinctive characteristics of commute demands is identified, it spills over into counterproductive work behaviors. Based on core affect theory (Russell, 2003), we propose that commute demands are specifically linked to irritability, a negative, high-arousal affective state without a clear, identifiable cause. We further posit that elevated morning irritability will be associated with higher levels of interpersonal counterproductive work behaviors during the workday. In a fiel", "author_link": "https://scholar.google.com/scholar?q=Gale+Jake"}, {"id": 4, "title": "Reciprocal relationships between personality traits and job satisfaction? A continuous time approach with two investigations", "authors": ["Yu Kaili", "Li Wen-Dong", "Yang Weiwen"], "journal": "Journal of Applied Psychology", "journal_short": "JAP", "year": "2026", "doi": "10.1037/apl0001388", "doi_url": "https://doi.org/10.1037/apl0001388", "abstract": "Challenging the traditional perspective in organizational research that personality traits represent stable predictors of work outcomes, researchers have begun investigating how work experiences fuel personality trait development. Yet, research has yielded mixed findings on whether work experiences (e.g., job satisfaction) can indeed shape personality adaptation. Drawing on recent development in personality science highlighting influences of psychological and idiosyncratic work experiences as positive or negative reinforcements in personality change, we conducted two studies to examine whether and how job satisfaction may influence, and be influenced by, the Big Five personality traits at the within-person level. We first conducted a preregistered continuous time meta-analysis of existing ", "author_link": "https://scholar.google.com/scholar?q=Yu+Kaili"}, {"id": 5, "title": "Resocialization as a lens to understanding workplace reentry transitions: An integrative conceptual review", "authors": ["Ladge Jamie J", "Sala Gabriel R", "Holm Audrey L"], "journal": "Journal of Applied Psychology", "journal_short": "JAP", "year": "2026", "doi": "10.1037/apl0001384", "doi_url": "https://doi.org/10.1037/apl0001384", "abstract": "Workplace reentry affects millions of workers annually, with over 15 million Americans supported by the Family and Medical Leave Act in 2024 alone. Yet research remains fragmented across contexts and lacks theoretical coherence. This integrative conceptual review synthesizes 264 articles spanning diverse reentry contexts following career breaks or leaves of absence, including family, medical, military redeployment, unemployment, retirement, sabbaticals, expatriation, and incarceration. We develop a unified theoretical framework grounded in resocialization theory that addresses the unique complexity of workplace reentry, where individuals must simultaneously unlearn outdated information, update existing knowledge, and navigate changed relationships while managing their dual insider-outsider", "author_link": "https://scholar.google.com/scholar?q=Ladge+Jamie+J"}, {"id": 6, "title": "Reducing shrinkage in diversity tradeoff curves for personnel selection: Comparing local validity studies, meta-analysis, and Bayes analysis", "authors": ["Tang Chen", "Newman Daniel A", "Song Q Chelsea"], "journal": "Journal of Applied Psychology", "journal_short": "JAP", "year": "2026", "doi": "10.1037/apl0001376", "doi_url": "https://doi.org/10.1037/apl0001376", "abstract": "For reducing adverse impact, the diversity-validity tradeoff curve approach (De Corte et al., 2007) provides sets of selection predictor weights that can often substantially enhance diversity (i.e., increase adverse impact ratio and number of minority job offers), with no loss of job performance in comparison to unit weights (Wee et al., 2014). A key limitation of this diversity-enhancing approach is the tendency for tradeoff curves to shrink, leading to lesser job performance and diversity outcomes upon cross-validation (Song et al., 2017). The current article evaluates and compares tradeoff curve shrinkage (both validity shrinkage and diversity shrinkage) using three types of validity evidence/calibration studies: (a) a local validity study, (b) a meta-analysis (Schmidt & Hunter, 1977), ", "author_link": "https://scholar.google.com/scholar?q=Tang+Chen"}, {"id": 7, "title": "They'll conform anyway: A motivation stereotype perspective on the exploitation of Asian employees", "authors": ["Yan Liuxin", "Chen Anjier"], "journal": "Journal of Applied Psychology", "journal_short": "JAP", "year": "2026", "doi": "10.1037/apl0001380", "doi_url": "https://doi.org/10.1037/apl0001380", "abstract": "Perceptions of motivation play a critical role in shaping workplace treatment, yet little is known about how such perceptions are socially constructed. Drawing on social exchange theories and perspectives on interdependent versus independent self, we propose an ethnic-stereotype perspective of perceived motivation, suggesting that Asian employees are perceived as having higher controlled motivation-being driven by external pressures and expectations rather than personal volition-which leads supervisors to anticipate greater conformity from Asian employees and subsequently exploit them. Across one experiment (Study 1), one multiwave survey (Study 2), and one preregistered experiment with a behavioral measure (Study 3a), we consistently found that Asian employees were perceived as having hig", "author_link": "https://scholar.google.com/scholar?q=Yan+Liuxin"}, {"id": 8, "title": "Setting higher referral targets increases the number of women recommended: Evidence from the field and lab", "authors": ["Rai Aneesh", "Kirgios Erika L", "Lucas Brian J"], "journal": "Journal of Applied Psychology", "journal_short": "JAP", "year": "2026", "doi": "10.1037/apl0001373", "doi_url": "https://doi.org/10.1037/apl0001373", "abstract": "Women continue to be underrepresented in numerous occupations and in the highest echelons of many organizations. This may be due, in part, to disadvantages they face in referral-based hiring and promotion processes, as women are less inclined to ask for referrals and less likely to be referred than men for male-dominated jobs. We integrate insights from the goal-setting and creativity literatures to propose an intervention to boost referrals of women: requesting a greater target number of referrals (e.g., at least four instead of at least two referrals). This strategy sets a motivating goal to provide more referrals, which should mechanically increase the number of women referred. In addition, requesting more referrals in male-dominated contexts may lead to prototype divergence, which shou", "author_link": "https://scholar.google.com/scholar?q=Rai+Aneesh"}, {"id": 9, "title": "How policy implementation impacts employee suffering at work: An exploration of medical leaves of absence", "authors": ["Barnes Liza Y", "Lacerenza Christina N", "Hardin Ashley E"], "journal": "Journal of Applied Psychology", "journal_short": "JAP", "year": "2026", "doi": "10.1037/apl0001383", "doi_url": "https://doi.org/10.1037/apl0001383", "abstract": "Existing work offers rich theory on how work-life policies increase autonomy and balance and reduce work-life conflict. However, in moments when life is not merely imbalanced but severely upended, such as during times of severe illness or injury, this focus on balance and autonomy may be less relevant. We explore these moments of suffering by examining an often-overlooked work-life policy: medical leaves of absence. Through a qualitative grounded theory approach, we draw on the perspectives of 48 individuals (leave-takers and leave coordinators) to offer a comprehensive understanding of how medical leave policy implementation influences employee suffering at work. We first shed light on the elements of health-related suffering in the workplace and then introduce a healing-centered implemen", "author_link": "https://scholar.google.com/scholar?q=Barnes+Liza+Y"}, {"id": 10, "title": "The many facets of leadership: A meta-analysis of personality facets, leader effectiveness, and emergence", "authors": ["Baker Nathan", "Scott William", "Nye Christopher D"], "journal": "Journal of Applied Psychology", "journal_short": "JAP", "year": "2026", "doi": "10.1037/apl0001378", "doi_url": "https://doi.org/10.1037/apl0001378", "abstract": "Personality traits can be useful predictors of leader effectiveness and emergence. Although these traits are recognized as important, existing research has neglected the potential advantages of considering personality at the facet level to clarify and extend theory regarding how personality relates to leader outcomes, as well as improve the use of personality as a predictor of leader effectiveness and emergence. This meta-analysis examines how narrow personality dimensions relate to leader emergence and effectiveness across theoretically relevant contextual differences including leader hierarchical level and organization type. A final set of k = 203 data sets was analyzed to examine these relationships. The results of this work highlight that personality facets vary substantially in their ", "author_link": "https://scholar.google.com/scholar?q=Baker+Nathan"}, {"id": 11, "title": "Who benefits from board quotas? Intersectional disparities and the moderating role of experience for women directors in India", "authors": ["Dwivedi Priyanka", "Basuthakur Yashodhara", "Devers Cynthia E"], "journal": "Journal of Applied Psychology", "journal_short": "JAP", "year": "2026", "doi": "10.1037/apl0001375", "doi_url": "https://doi.org/10.1037/apl0001375", "abstract": "Although gender quotas are gaining increasing popularity, evidence on their effectiveness is mixed. While some studies set in Western contexts suggest a positive impact on women's board representation, others demonstrate backlash. Further, because this research primarily treats women as a singular, homogenous group, it overlooks critical intersectionality issues on boards, limiting our understanding of how quotas may shape the outcomes of women directors from marginalized groups. We contribute to this growing scholarly debate on quota effectiveness by examining the outcomes of women directors from both dominant and marginalized groups. Drawing on the instrumental perspective on legitimacy and intersectionality research, we propose that although all women directors gain additional board app", "author_link": "https://scholar.google.com/scholar?q=Dwivedi+Priyanka"}, {"id": 12, "title": "The paradox of structural empowerment: How and when structural empowerment fuels psychological entitlement and undermines resource sharing", "authors": ["Lee Hun Whee"], "journal": "Journal of Applied Psychology", "journal_short": "JAP", "year": "2026", "doi": "10.1037/apl0001377", "doi_url": "https://doi.org/10.1037/apl0001377", "abstract": "In recent decades, many organizations have been restructuring in ways that formally decentralize the necessary resources, information, and sociopolitical support, which is labeled \"structural empowerment.\" Although prior research suggests that structural empowerment enhances resource exchanges, I challenge this conventional wisdom by theorizing its potential drawbacks for resource sharing. Integrating the evolutionary perspective of work design and the dominance-prestige model, I developed a comprehensive model of how and when structural empowerment can hinder employees' resource sharing via psychological entitlement. I employed multiwave (Study 1) and multisource (Studies 2 and 3) field surveys and experimental methodology (Study 4) to test my hypotheses. The results reveal that dominance", "author_link": "https://scholar.google.com/scholar?q=Lee+Hun+Whee"}, {"id": 13, "title": "The importance of not looking the other way: Prehire on- and off-the-job misbehavior predicts subsequent police misconduct", "authors": ["Dilchert Stephan", "Mercado Brittany K", "Ones Deniz S"], "journal": "Journal of Applied Psychology", "journal_short": "JAP", "year": "2026", "doi": "10.1037/apl0001322", "doi_url": "https://doi.org/10.1037/apl0001322", "abstract": "This research addresses an often-overlooked opportunity for police reform: the predictive value of prehire misbehavior data for reducing posthire police misconduct. While most reform efforts focus on officers' actions after they are hired, our findings highlight the impact of rigorous screening before hire. We examined how specific prior employment and nonwork misbehaviors related to general occupational instability, trouble in previous law enforcement roles, prior temper problems and violence, and irresponsible behaviors predicted future misconduct among 6,075 police officers tracked over 5 years. Notably, some prehire behaviors significantly elevated risks of citizen complaints and misconduct-related lawsuits, with hazard ratios up to 14.59. Contrary to common assumptions, candidates wit", "author_link": "https://scholar.google.com/scholar?q=Dilchert+Stephan"}, {"id": 14, "title": "The gendered costs of voice (un)enacted: Differential effects on belonging in traditionally male-dominated contexts", "authors": ["Farh Crystal I C", "Middlebrook Blair E", "Oh Kyoungjo Jo"], "journal": "Journal of Applied Psychology", "journal_short": "JAP", "year": "2026", "doi": "10.1037/apl0001364", "doi_url": "https://doi.org/10.1037/apl0001364", "abstract": "Recent research indicates that performance benefits on complex tasks accrue when members with diverse social identities speak up and their voice is enacted-that is, incorporated into the team's approach to the task. In this article, we argue that the cost of not enacting diverse members' voice may extend beyond performance to negatively affect their belonging. Integrating social belonging theory with the literature on gender and voice, we examine the case of women in traditionally male-dominated contexts. Archival data from teams of active-duty Marines (Study 1) and student engineering project teams (Study 2) showed that voice enactment was more strongly associated with women's belonging than men's, and women's belonging was disproportionately harmed when voice enactment was low. A preregi", "author_link": "https://scholar.google.com/scholar?q=Farh+Crystal+I+C"}, {"id": 15, "title": "When (collective) losses loom larger than voice pains: The effect of loss framing on willingness to speak up at work", "authors": ["Thomas Jeffrey P", "Booth Jonathan E", "Thompson Phillip S"], "journal": "Journal of Applied Psychology", "journal_short": "JAP", "year": "2026", "doi": "10.1037/apl0001372", "doi_url": "https://doi.org/10.1037/apl0001372", "abstract": "Previous research indicates that employees often believe that it is too risky to voice their concerns about organizational problems; however, prospect theory suggests that people are more willing to take risks when problems are framed in terms of potential losses rather than potential gains. To reconcile these perspectives, we draw on prospect theory and the principle of loss aversion to explain why loss framing (compared to gain framing) will increase employees' willingness to engage in voice behavior. In Study 1, we used a scenario experiment and found that participants who considered potential losses (compared to gains) after writing about a problem at work were more willing to speak up. Further, integrating prospect theory with research on other orientation, we extended these findings ", "author_link": "https://scholar.google.com/scholar?q=Thomas+Jeffrey+P"}, {"id": 16, "title": "For good and for bad: The distinctive effects of successors' leadership behavior on collective engagement and organizational performance", "authors": ["Klein Katherine J", "Schwartz Shoshana", "Keller J R"], "journal": "Journal of Applied Psychology", "journal_short": "JAP", "year": "2026", "doi": "10.1037/apl0001359", "doi_url": "https://doi.org/10.1037/apl0001359", "abstract": "Leadership transitions are a fact of organizational life, yet the impact of successors' leadership behavior on organizational outcomes is little understood. Building on change readiness, uncertainty management, and romance of leadership theory and research, we propose a novel theory describing the distinctive effects of successors' versus incumbents' leadership behavior in driving change in collective engagement and organizational performance. We theorize that when employees perceive a great need for organizational change, successors' vision communication and coaching are more likely than incumbents' to yield improvements in collective engagement and organizational performance. But when employees perceive little need for change, successors' vision communication and coaching are more likely", "author_link": "https://scholar.google.com/scholar?q=Klein+Katherine+J"}, {"id": 17, "title": "The effects of food insecurity on work outcomes", "authors": ["Moy Jason H", "Khan Ussama Ahmad", "Ong Wei Jee"], "journal": "Journal of Applied Psychology", "journal_short": "JAP", "year": "2026", "doi": "10.1037/apl0001361", "doi_url": "https://doi.org/10.1037/apl0001361", "abstract": "Food insecurity-insufficient access to safe and nutritious foods-is one of the most crucial societal grand challenges the world faces today. It affects 2.3 billion people globally, and addressing it is one of the United Nations' Sustainable Development Goals of 2030 (Food and Agriculture Organization of the United Nations et al., 2025). Despite its prevalence and importance, the field of applied psychology has ignored this problem with the implicit assumption that food insecurity is not an issue relevant to the workplace. Contrary to this view, we hypothesize and demonstrate that food insecurity is detrimental to the three core work outcomes: task performance, work engagement, and organizational citizenship behaviors. To test our hypotheses, we employed a multimethod design across three em", "author_link": "https://scholar.google.com/scholar?q=Moy+Jason+H"}, {"id": 18, "title": "Clusters of general counterproductive behavior and associated personality profiles", "authors": ["Wilmot Michael P", "Ones Deniz S", "Wiernik Brenton M"], "journal": "Journal of Applied Psychology", "journal_short": "JAP", "year": "2026", "doi": "10.1037/apl0001344", "doi_url": "https://doi.org/10.1037/apl0001344", "abstract": "Counterproductive behavior (e.g., aggression, theft, dishonesty) is a persistent societal problem with a substantial dispositional basis. Despite broad interest in the subject, little scholarship has studied relations of variables associated with counterproductive behavior and their dispositional antecedents across work and nonwork domains. Drawing on cybernetic theories of personality, we posit that personality malfunction (an imbalance between cybernetic processes responsible for maintaining homeostasis and facilitating change) contributes to general counterproductive behavior (GCB). To test this theory, we conduct a quantitative review and synthesis of meta-analyses that report Big Five personality trait relations to variables indicative of GCB. Overall, we locate 46 articles reporting ", "author_link": "https://scholar.google.com/scholar?q=Wilmot+Michael+P"}, {"id": 19, "title": "The hidden cost of courage: How oppositional courage shapes trans employees' diminished image belief", "authors": ["Thoroughgood Christian N", "Sawyer Katina B", "Watson Gwendolyn Paige"], "journal": "Journal of Applied Psychology", "journal_short": "JAP", "year": "2026", "doi": "10.1037/apl0001374", "doi_url": "https://doi.org/10.1037/apl0001374", "abstract": "Fulfilling the promise of greater workplace inclusion increasingly hinges on advantaged group employees' oppositional courage (OC)-a nonnormative form of allyship involving significant risk to the actor. Research suggests OC may not only offer instrumental benefits to marginalized employees but also convey a powerful \"message of value\" from the actor. Yet these courageous acts do not occur in a vacuum, suggesting they may carry social consequences for marginalized employees. Drawing from theory on helping relations and research on social cognition, we argue these risky acts can inadvertently signal unique strength in the actor, triggering marginalized employees' diminished image belief-a concern others see them as weak and unable to stand up for themselves. We further propose that this per", "author_link": "https://scholar.google.com/scholar?q=Thoroughgood+Christian+N"}, {"id": 20, "title": "Personal self-disclosure as a mixed blessing in teams: Effects through relational and cognitive mechanisms", "authors": ["Yang Junhui", "Song Yifan", "Koopmann Jaclyn"], "journal": "Journal of Applied Psychology", "journal_short": "JAP", "year": "2026", "doi": "10.1037/apl0001370", "doi_url": "https://doi.org/10.1037/apl0001370", "abstract": "Although personal self-disclosure has been increasingly encouraged in organizations and teams to enhance authenticity and workplace effectiveness, the nature of its impact in team contexts remains debated. Existing literature predominantly focuses on the relational effects of receiving personal self-disclosure but ignores its cognitive effects and key contextual contingencies that help elucidate when it has positive versus negative consequences. This study provides a more comprehensive theoretical account of the effects of self-disclosure in team contexts by combining social penetration and information processing perspectives into a multilevel theoretical framework. We tested our theoretical model in two team samples. Supporting our hypotheses, we found that personal self-disclosure had co", "author_link": "https://scholar.google.com/scholar?q=Yang+Junhui"}, {"id": 21, "title": "Who Says Women Shouldn't Network? Mindsets That Predict and Reduce Bias Against Female Networkers", "authors": ["Kuwabara Ko"], "journal": "Personnel Psychology", "journal_short": "PersPsych", "year": "2026", "doi": "10.1111/peps.70016", "doi_url": "https://doi.org/10.1111/peps.70016", "abstract": "This research addresses the growing recognition that women's professional networks tend to be less effective than men's, and examines who holds bias against women who network, why, and how to debias them. Drawing on research documenting pervasive gender bias that penalizes women for engaging in instrumental networking, the authors find that gender bias does not occur uniformly but depends on the mindsets people hold about networking: people who view networking ability in terms of fixed attributes (fixed theorists) are more likely to view female networkers negatively. Four experiments demonstrate these effects and test debiasing interventions. Published in Volume 79, Issue 1, pages 25–39.", "author_link": "https://scholar.google.com/scholar?q=Ko+Kuwabara+networking+gender"}, {"id": 22, "title": "The Social Capital Imperative: Revealing, Developing, and Leveraging Organizational Networks", "authors": ["Soltis Scott M"], "journal": "Personnel Psychology", "journal_short": "PersPsych", "year": "2026", "doi": "10.1111/peps.70019", "doi_url": "https://doi.org/10.1111/peps.70019", "abstract": "A scholarly book review examining the imperative of social capital in organizations, covering how to reveal, develop, and leverage organizational networks for competitive advantage and employee effectiveness. Published in Personnel Psychology Volume 79, pages 103–104.", "author_link": "https://scholar.google.com/scholar?q=Scott+Soltis+social+capital+organizations"}, {"id": 23, "title": "Making Sense of Employee Responses to Organizational Change: Integrating the Theoretical Landscape Across Research Communities", "authors": ["Kanitz Rouven", "Gonzalez Katerina", "Fugate Mel", "Venkatesh Viswanath"], "journal": "Journal of Organizational Behavior", "journal_short": "JOB", "year": "2026", "doi": "10.1002/job.70080", "doi_url": "https://doi.org/10.1002/job.70080", "abstract": "A review of 215 empirical articles published between 1998 and 2024 in leading business administration journals, identifying eight overarching theoretical themes explaining why employees support or resist organizational change: (1) motivational–attitudinal, (2) relational, (3) sensemaking and discourse, among others. The paper integrates fragmented theoretical landscapes across research communities to advance both organizational change theory and practice.", "author_link": "https://scholar.google.com/scholar?q=Rouven+Kanitz+organizational+change"}, {"id": 24, "title": "The Power of Play in Organizations", "authors": ["Restubog Simon L D"], "journal": "Journal of Organizational Behavior", "journal_short": "JOB", "year": "2026", "doi": "10.1002/job.70074", "doi_url": "https://doi.org/10.1002/job.70074", "abstract": "This paper examines the role of playfulness and play-based experiences in organizational settings. It explores how play functions as a resource that enhances creativity, well-being, and performance, while also considering boundary conditions under which play may not produce positive outcomes.", "author_link": "https://scholar.google.com/scholar?q=Simon+Restubog+play+organizations"}, {"id": 25, "title": "Does Leader Feedback-Seeking Behavior Fuel Employee Voice? The Roles of Organization-Based Self-Esteem, Workplace Anxiety and Apparent Sincerity of Leader", "authors": ["Lou Jiaxin"], "journal": "Journal of Organizational Behavior", "journal_short": "JOB", "year": "2026", "doi": "10.1002/job.70078", "doi_url": "https://doi.org/10.1002/job.70078", "abstract": "This study investigates how leader feedback-seeking behavior influences employee voice behavior. Using multilevel data, the study finds that when leaders actively seek feedback, it signals openness and psychological safety, boosting employees' organization-based self-esteem and reducing workplace anxiety, thereby encouraging voice—but only when employees perceive the leader's feedback-seeking as sincere.", "author_link": "https://scholar.google.com/scholar?q=Jiaxin+Lou+leader+feedback+seeking+employee+voice"}, {"id": 26, "title": "Being Left in the Dark: Leader Work-Related Secrecy, Psychological Contract Violation, and Employee Discretionary Behavior", "authors": ["Wang Jenny H"], "journal": "Journal of Organizational Behavior", "journal_short": "JOB", "year": "2026", "doi": "10.1002/job.70084", "doi_url": "https://doi.org/10.1002/job.70084", "abstract": "This paper examines the consequences of leader work-related secrecy—when leaders deliberately withhold work-relevant information from employees. Drawing on psychological contract theory, the study shows that leader secrecy leads to psychological contract violation, which in turn reduces employees' discretionary behaviors such as OCB and increases deviant behavior.", "author_link": "https://scholar.google.com/scholar?q=Jenny+Wang+leader+secrecy+psychological+contract"}];
+
+let activeJournal = 'all';
+let expandedStates = {};
+let findingsCache = {};
+
+function setFilter(btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeJournal = btn.dataset.journal;
+  applyFilters();
+}
+
+function applyFilters() {
+  const q = document.getElementById('search-input').value.toLowerCase().trim();
+  const filtered = PAPERS.filter(p => {
+    const journalMatch = activeJournal === 'all' || p.journal_short === activeJournal;
+    if (!journalMatch) return false;
+    if (!q) return true;
+    return (
+      p.title.toLowerCase().includes(q) ||
+      p.authors.join(' ').toLowerCase().includes(q) ||
+      p.abstract.toLowerCase().includes(q) ||
+      p.journal.toLowerCase().includes(q)
+    );
+  });
+  renderPapers(filtered);
+  document.getElementById('count-label').textContent = `${filtered.length} of ${PAPERS.length} papers`;
+}
+
+function renderPapers(list) {
+  const container = document.getElementById('papers-container');
+  if (list.length === 0) {
+    container.innerHTML = `<div class="empty"><p>No papers match your search. Try a different keyword.</p></div>`;
+    return;
+  }
+  container.innerHTML = list.map(p => cardHTML(p)).join('');
+}
+
+function cardHTML(p) {
+  const isExpanded = expandedStates[p.id] || false;
+  const findings = findingsCache[p.id];
+  const authorLinks = p.authors.slice(0,3).map((a, i) => {
+    const schUrl = `https://scholar.google.com/scholar?q=${encodeURIComponent(a + ' ' + (p.journal_short === 'JAP' ? 'applied psychology' : 'organizational behavior'))}`;
+    return `<a href="${schUrl}" target="_blank" rel="noopener">${a}</a>`;
+  }).join(', ') + (p.authors.length > 3 ? ` <span style="color:#8b92a9">+${p.authors.length-3} more</span>` : '');
+
+  let findingsHTML = '';
+  if (isExpanded) {
+    if (!findings) {
+      findingsHTML = `<div class="findings-box loading" id="findings-${p.id}">Generating AI key takeaways…</div>`;
+    } else if (findings.error) {
+      findingsHTML = `<div class="findings-box error">${findings.text}</div>`;
+    } else {
+      findingsHTML = `<div class="findings-box" id="findings-${p.id}">${findings.text}</div>`;
+    }
+  }
+
+  return `
+<div class="card${isExpanded ? ' expanded' : ''}" id="card-${p.id}">
+  <div class="card-header" onclick="toggleCard(${p.id})">
+    <div class="card-top">
+      <span class="journal-badge badge-${p.journal_short}">${p.journal_short}</span>
+      <span class="card-title">${escHtml(p.title)}</span>
+    </div>
+    <div class="card-authors">${authorLinks}</div>
+    <div class="card-footer">
+      <span class="card-year">${p.journal} · ${p.year}</span>
+      <span class="expand-btn">
+        ${isExpanded ? 'Hide details' : 'View details'}
+        <span class="expand-arrow">▾</span>
+      </span>
+    </div>
+  </div>
+  ${isExpanded ? `
+  <div class="card-body">
+    <div class="section-label">Abstract</div>
+    <div class="abstract-text">${escHtml(p.abstract)}</div>
+    <div class="section-label">🤖 Key Takeaways (AI-generated)</div>
+    ${findingsHTML}
+    <div class="links-row">
+      <a class="link-btn link-doi" href="${p.doi_url}" target="_blank" rel="noopener">📄 View Paper (DOI)</a>
+      <a class="link-btn link-scholar" href="${p.author_link}" target="_blank" rel="noopener">👤 Author on Google Scholar</a>
+    </div>
+  </div>` : ''}
+</div>`;
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+async function toggleCard(id) {
+  expandedStates[id] = !expandedStates[id];
+  applyFilters();
+  if (expandedStates[id] && !findingsCache[id]) {
+    await generateFindings(id);
+  }
+}
+
+async function generateFindings(id) {
+  const paper = PAPERS.find(p => p.id === id);
+  if (!paper) return;
+  try {
+    const prompt = `You are an expert in Industrial-Organizational Psychology. Based on this abstract, provide 2-3 concise bullet-point key takeaways that practitioners or researchers should know. Be specific and actionable. Use plain language. Format as bullet points starting with •.
+
+Title: ${paper.title}
+Abstract: ${paper.abstract}
+
+Provide only the bullet points, no intro text.`;
+
+    const result = await window.cowork.askClaude(prompt, []);
+    findingsCache[id] = { text: result.replace(/\n/g, '<br>') };
+  } catch(e) {
+    const msg = typeof window.cowork === 'undefined'
+      ? 'AI takeaways require Claude Desktop. Open this file inside Claude Desktop to use this feature.'
+      : 'Could not generate takeaways. Try expanding again.';
+    findingsCache[id] = { error: true, text: msg };
+  }
+  // Update just the findings box
+  const el = document.getElementById(`findings-${id}`);
+  if (el) {
+    if (findingsCache[id].error) {
+      el.className = 'findings-box error';
+    } else {
+      el.className = 'findings-box';
+    }
+    el.innerHTML = findingsCache[id].text;
+  }
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('total-badge').textContent = `${PAPERS.length} papers`;
+  applyFilters();
+});
+</script>
+</body>
+</html>
