@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nexus — Syed Asrar</title>
+  <title>Nexus — Syed</title>
   <meta name="description" content="AI tools, research technology, and web applications by Syed Asrar.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='url(%23g)'/><text x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='system-ui' font-weight='900' font-size='19' fill='white'>N</text><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%25' stop-color='%237c3aed'/><stop offset='100%25' stop-color='%233b82f6'/></linearGradient></defs></svg>" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -323,8 +323,33 @@
     ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
     ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); }
   </style>
+  <style>
+.syed-bar{display:flex;align-items:center;gap:10px;padding:0 20px;height:38px;background:#080c14;border-bottom:1px solid #0f172a;font-family:'Inter',system-ui,sans-serif;position:sticky;top:0;z-index:9999;flex-shrink:0}
+.syed-bar-logo{display:flex;align-items:center;gap:8px;text-decoration:none;flex-shrink:0}
+.syed-mark{width:22px;height:22px;background:linear-gradient(135deg,#2563eb,#7c3aed);border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:.71rem;font-weight:800;color:#fff;flex-shrink:0}
+.syed-name{font-size:.82rem;font-weight:700;color:#f8fafc;letter-spacing:-.01em}
+.syed-divider{color:#1e293b;font-size:.9rem;margin:0 2px;user-select:none}
+.syed-project{font-size:.75rem;color:#334155;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+.syed-links{display:flex;align-items:center;margin-left:auto;flex-shrink:0}
+.syed-link{font-size:.71rem;color:#334155;text-decoration:none;padding:4px 9px;border-radius:5px;transition:.12s;white-space:nowrap}
+.syed-link:hover{color:#93c5fd;background:#ffffff08}
+.syed-link-all{color:#60a5fa!important;font-weight:600}
+.syed-link-all:hover{color:#bfdbfe!important}
+@media(max-width:640px){.syed-links{display:none}}
+  </style>
 </head>
 <body>
+<div class="syed-bar">
+  <a class="syed-bar-logo" href="https://syahmedu.github.io/nexus/" target="_blank" rel="noopener"><span class="syed-mark">S</span><span class="syed-name">Syed</span></a>
+  <span class="syed-divider">·</span>
+  <span class="syed-project">All Projects</span>
+  <nav class="syed-links">
+    <a class="syed-link" href="https://syahmedu.github.io/journaltime/" target="_blank" rel="noopener">JournalTime</a>
+    <a class="syed-link" href="https://syahmedu.github.io/cadence/" target="_blank" rel="noopener">Cadence</a>
+    <a class="syed-link" href="https://scalescope.vercel.app" target="_blank" rel="noopener">ScaleScope</a>
+    <a class="syed-link" href="https://ideabox-six.vercel.app" target="_blank" rel="noopener">IdeaBox</a>
+  </nav>
+</div>
 
 <!-- Background -->
 <div class="bg">
