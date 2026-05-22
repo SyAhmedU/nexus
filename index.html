@@ -166,7 +166,7 @@
 
     /* ── Filter ──────────────────────────────────── */
     .filter { padding-bottom: 28px; }
-    .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; }
+    .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
     .fb {
       padding: 7px 16px; border-radius: 100px;
       border: 1px solid var(--border);
@@ -177,6 +177,23 @@
     }
     .fb:hover { border-color: rgba(255,255,255,0.2); color: var(--text-h); }
     .fb.active { background: var(--grad); border-color: transparent; color: #fff; }
+    .nsearch-wrap { position: relative; margin-left: auto; }
+    .nsearch {
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+      color: var(--text-h); padding: 7px 32px 7px 14px;
+      border-radius: 100px; font-size: 13px; font-family: inherit;
+      outline: none; width: 200px; transition: border-color 0.2s, width 0.2s;
+    }
+    .nsearch:focus { border-color: rgba(124,58,237,0.5); width: 240px; }
+    .nsearch::placeholder { color: var(--text-d); }
+    .nsearch-clear {
+      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; color: var(--text-d); cursor: pointer;
+      font-size: 16px; line-height: 1; padding: 0 2px;
+      display: none;
+    }
+    .nsearch-clear.show { display: block; }
+    .nsearch-clear:hover { color: var(--text-h); }
 
     /* ── Grid ────────────────────────────────────── */
     .grid {
@@ -409,6 +426,10 @@
       <button class="fb" data-f="web">Web Apps</button>
       <button class="fb" data-f="education">Education</button>
       <button class="fb" data-f="lifestyle">Lifestyle</button>
+      <div class="nsearch-wrap">
+        <input id="nsearch" class="nsearch" type="text" placeholder="Search projects…" autocomplete="off" />
+        <button id="nsearch-clear" class="nsearch-clear" title="Clear search">×</button>
+      </div>
     </div>
   </div>
 
@@ -642,20 +663,42 @@
 </footer>
 
 <script>
-  // ── Filter ──────────────────────────────────────────────
+  // ── Filter + Search ─────────────────────────────────────
   const fBtns = document.querySelectorAll('.fb');
   const cards = document.querySelectorAll('.card');
+  const nsearch = document.getElementById('nsearch');
+  const nsearchClear = document.getElementById('nsearch-clear');
+  let activeFilter = 'all';
+
+  function applyFilters() {
+    const q = nsearch.value.trim().toLowerCase();
+    nsearchClear.classList.toggle('show', q.length > 0);
+    cards.forEach(card => {
+      const cats = (card.dataset.cats || '').split(' ');
+      const catMatch = activeFilter === 'all' || cats.includes(activeFilter);
+      let textMatch = true;
+      if (q) {
+        const text = (card.textContent || '').toLowerCase();
+        textMatch = text.includes(q);
+      }
+      card.classList.toggle('off', !catMatch || !textMatch);
+    });
+  }
 
   fBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       fBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      const f = btn.dataset.f;
-      cards.forEach(card => {
-        const cats = (card.dataset.cats || '').split(' ');
-        card.classList.toggle('off', f !== 'all' && !cats.includes(f));
-      });
+      activeFilter = btn.dataset.f;
+      applyFilters();
     });
+  });
+
+  nsearch.addEventListener('input', applyFilters);
+  nsearchClear.addEventListener('click', () => {
+    nsearch.value = '';
+    applyFilters();
+    nsearch.focus();
   });
 
   // ── Scroll-in animation ─────────────────────────────────
