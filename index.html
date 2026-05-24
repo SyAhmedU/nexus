@@ -1,420 +1,445 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nexus — Syed</title>
+  <title>Nexus — Syed Asrar</title>
   <meta name="description" content="AI tools, research technology, and web applications by Syed Asrar.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='url(%23g)'/><text x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='system-ui' font-weight='900' font-size='19' fill='white'>N</text><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%25' stop-color='%237c3aed'/><stop offset='100%25' stop-color='%233b82f6'/></linearGradient></defs></svg>" type="image/svg+xml">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='9' fill='url(%23g)'/><text x='50%25' y='56%25' dominant-baseline='middle' text-anchor='middle' font-family='system-ui' font-weight='900' font-size='18' fill='white'>N</text><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%25' stop-color='%23ff8a3d'/><stop offset='50%25' stop-color='%23f02e65'/><stop offset='100%25' stop-color='%237c3aed'/></linearGradient></defs></svg>" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- pre-paint theme to avoid flash -->
+  <script>(function(){try{var t=localStorage.getItem('syed-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
+    :root, [data-theme="light"] {
+      --bg:        #FBF7EF;
+      --bg-2:      #FFFFFF;
+      --bg-soft:   #F3EEE3;
+      --ink:       #0E0E18;
+      --ink-2:     #3C3C48;
+      --ink-3:     #6F6F7E;
+      --muted:     #9C9CAB;
+      --border:    rgba(14,14,24,.08);
+      --border-strong: rgba(14,14,24,.14);
+      --card:      #FFFFFF;
+      --chip:      #F1ECDF;
+      --chip-ink:  #4A4136;
+      --shadow:    0 10px 30px -14px rgba(20,12,40,.12), 0 2px 6px rgba(20,12,40,.04);
+      --shadow-h:  0 26px 60px -22px rgba(240,46,101,.30), 0 8px 20px rgba(20,12,40,.10);
+      --ring:      rgba(240,46,101,.35);
+      --grid-dot:  rgba(20,12,40,.05);
+      --blob-1:    radial-gradient(circle, rgba(255,138,61,.55), transparent 65%);
+      --blob-2:    radial-gradient(circle, rgba(240,46,101,.45), transparent 65%);
+      --blob-3:    radial-gradient(circle, rgba(124,58,237,.40), transparent 65%);
+    }
+    [data-theme="dark"] {
+      --bg:        #0A0A12;
+      --bg-2:      #11111C;
+      --bg-soft:   #161624;
+      --ink:       #F4F2EC;
+      --ink-2:     #C9C7C0;
+      --ink-3:     #8B8A93;
+      --muted:     #5F5E68;
+      --border:    rgba(255,255,255,.08);
+      --border-strong: rgba(255,255,255,.16);
+      --card:      #15151F;
+      --chip:      rgba(255,255,255,.06);
+      --chip-ink:  #D6D4CC;
+      --shadow:    0 10px 30px -14px rgba(0,0,0,.55), 0 2px 6px rgba(0,0,0,.30);
+      --shadow-h:  0 30px 60px -22px rgba(240,46,101,.40), 0 8px 20px rgba(0,0,0,.55);
+      --ring:      rgba(240,46,101,.45);
+      --grid-dot:  rgba(255,255,255,.045);
+      --blob-1:    radial-gradient(circle, rgba(255,138,61,.30), transparent 65%);
+      --blob-2:    radial-gradient(circle, rgba(240,46,101,.28), transparent 65%);
+      --blob-3:    radial-gradient(circle, rgba(124,58,237,.32), transparent 65%);
+    }
+
+    /* shared tokens */
     :root {
-      --bg:      #06060f;
-      --card:    rgba(255,255,255,0.04);
-      --border:  rgba(255,255,255,0.09);
-      --text:    #8892a4;
-      --text-h:  #e8ecf4;
-      --text-d:  #4e5768;
-      --purple:  #7c3aed;
-      --blue:    #3b82f6;
-      --teal:    #14b8a6;
-      --amber:   #f59e0b;
-      --grad:    linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%);
-      --r:       14px;
+      --grad-warm: linear-gradient(135deg,#FF8A3D 0%,#F02E65 55%,#7C3AED 100%);
+      --grad-cool: linear-gradient(135deg,#22D3EE 0%,#7C3AED 100%);
+      --grad-sun:  linear-gradient(135deg,#FFB75E 0%,#ED7028 100%);
+      --grad-pink: linear-gradient(135deg,#F472B6 0%,#F02E65 100%);
+      --grad-mint: linear-gradient(135deg,#22D3EE 0%,#10B981 100%);
+      --grad-iris: linear-gradient(135deg,#8B5CF6 0%,#3B82F6 100%);
+      --r-sm: 10px; --r: 18px; --r-lg: 24px; --r-xl: 32px;
     }
 
     html { scroll-behavior: smooth; }
-
     body {
       background: var(--bg);
-      color: var(--text);
+      color: var(--ink-2);
       font-family: 'Inter', system-ui, sans-serif;
       min-height: 100vh;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
+      transition: background-color .3s ease, color .3s ease;
     }
 
-    /* ── Background ──────────────────────────────── */
-    .bg {
-      position: fixed; inset: 0;
-      z-index: 0; pointer-events: none; overflow: hidden;
+    /* ── Decorative background blobs + dot grid ─────────────── */
+    .bg-fx {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
     }
-    .orb {
-      position: absolute; border-radius: 50%;
-      filter: blur(130px); opacity: 0.12;
+    .blob {
+      position: absolute; border-radius: 50%; filter: blur(80px); opacity: 1;
+      transition: opacity .3s ease;
     }
-    .orb-1 {
-      width: 900px; height: 900px;
-      background: radial-gradient(circle at center, #7c3aed 0%, transparent 60%);
-      top: -400px; left: -250px;
-      animation: fa 30s ease-in-out infinite;
-    }
-    .orb-2 {
-      width: 700px; height: 700px;
-      background: radial-gradient(circle at center, #2563eb 0%, transparent 60%);
-      bottom: -250px; right: -200px;
-      animation: fb 36s ease-in-out infinite;
-    }
-    .orb-3 {
-      width: 500px; height: 500px;
-      background: radial-gradient(circle at center, #a855f7 0%, transparent 60%);
-      top: 55%; left: 60%; opacity: 0.06;
-      animation: fc 45s ease-in-out infinite;
-    }
-    @keyframes fa { 0%,100%{transform:translate(0,0) scale(1)} 40%{transform:translate(80px,100px) scale(1.06)} 70%{transform:translate(-40px,50px) scale(0.95)} }
-    @keyframes fb { 0%,100%{transform:translate(0,0) scale(1)} 40%{transform:translate(-100px,-80px) scale(1.08)} 70%{transform:translate(50px,-60px) scale(0.96)} }
-    @keyframes fc { 0%,100%{transform:translate(-50%,-50%) scale(1)} 50%{transform:translate(-50%,-50%) scale(1.4)} }
-
+    .b1 { width: 540px; height: 540px; background: var(--blob-1); top: -180px; left: -120px; animation: drift1 26s ease-in-out infinite; }
+    .b2 { width: 640px; height: 640px; background: var(--blob-2); bottom: -260px; right: -180px; animation: drift2 32s ease-in-out infinite; }
+    .b3 { width: 460px; height: 460px; background: var(--blob-3); top: 40%; left: 55%; animation: drift3 38s ease-in-out infinite; }
+    @keyframes drift1 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(60px,80px) scale(1.08)} }
+    @keyframes drift2 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-80px,-60px) scale(1.06)} }
+    @keyframes drift3 { 0%,100%{transform:translate(-50%,-50%) scale(1)} 50%{transform:translate(-50%,-50%) scale(1.18)} }
     .dots {
       position: absolute; inset: 0;
-      background-image: radial-gradient(rgba(255,255,255,0.055) 1px, transparent 1px);
+      background-image: radial-gradient(var(--grid-dot) 1px, transparent 1px);
       background-size: 28px 28px;
     }
 
-    /* ── Layout ──────────────────────────────────── */
-    .wrap { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+    .wrap {
+      position: relative; z-index: 1;
+      max-width: 1180px; margin: 0 auto; padding: 0 24px;
+    }
 
-    /* ── Header ──────────────────────────────────── */
-    header {
-      position: sticky; top: 0; z-index: 100;
+    /* ── Syed Brand Bar (themed) ───────────────────────────── */
+    .syed-bar {
+      position: sticky; top: 0; z-index: 9999;
+      display: flex; align-items: center; gap: 12px;
+      padding: 0 22px; height: 52px;
+      background: color-mix(in srgb, var(--bg-2) 78%, transparent);
+      backdrop-filter: blur(20px) saturate(150%);
+      -webkit-backdrop-filter: blur(20px) saturate(150%);
       border-bottom: 1px solid var(--border);
-      background: rgba(6,6,15,0.72);
-      backdrop-filter: blur(28px);
-      -webkit-backdrop-filter: blur(28px);
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+      transition: background-color .3s ease, border-color .3s ease;
     }
-    .hdr {
-      display: flex; align-items: center; justify-content: space-between;
-      height: 58px; max-width: 1100px; margin: 0 auto; padding: 0 24px;
+    .syed-bar-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; transition: opacity .15s; }
+    .syed-bar-logo:hover { opacity: .8; }
+    .syed-mark {
+      width: 30px; height: 30px; border-radius: 9px;
+      background: var(--grad-warm);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: .82rem; font-weight: 800; color: #fff; flex-shrink: 0;
+      box-shadow: 0 4px 14px -4px rgba(240,46,101,.55);
+      animation: markPulse 5s ease-in-out infinite;
     }
-    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .logo-mark {
-      width: 30px; height: 30px; border-radius: 7px;
-      background: var(--grad);
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 800; font-size: 14px; color: #fff;
-      letter-spacing: -0.5px;
+    @keyframes markPulse { 0%,100%{box-shadow:0 4px 14px -4px rgba(240,46,101,.45)} 50%{box-shadow:0 6px 24px -4px rgba(124,58,237,.55)} }
+    .syed-name { font-size: .95rem; font-weight: 800; color: var(--ink); letter-spacing: -.02em; }
+    .syed-divider { width: 1px; height: 18px; background: var(--border); margin: 0 4px; flex-shrink: 0; }
+    .syed-project { font-size: .78rem; color: var(--ink-3); font-weight: 500; letter-spacing: .01em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; min-width: 0; }
+    .syed-links { display: flex; align-items: center; margin-left: auto; gap: 2px; flex-shrink: 0; }
+    .syed-link {
+      font-size: .78rem; font-weight: 600; color: var(--ink-3);
+      text-decoration: none; padding: 6px 12px; border-radius: 999px;
+      transition: color .15s, background .15s; white-space: nowrap;
     }
-    .logo-word { font-size: 15px; font-weight: 700; color: var(--text-h); letter-spacing: -0.3px; }
-    .logo-word em {
-      font-style: normal;
-      background: var(--grad);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    .syed-link:hover { color: var(--ink); background: var(--bg-soft); }
+    .syed-link-all {
+      font-weight: 700; color: #fff !important;
+      background: var(--grad-warm);
+      padding: 6px 14px; border-radius: 999px;
+      box-shadow: 0 6px 16px -6px rgba(240,46,101,.55);
     }
-    .gh-btn {
-      display: flex; align-items: center; gap: 7px;
-      padding: 7px 15px; border-radius: 8px;
-      border: 1px solid var(--border);
-      background: var(--card);
-      color: var(--text);
-      font-size: 13px; font-weight: 500;
-      text-decoration: none;
-      transition: all 0.2s;
-      backdrop-filter: blur(12px);
+    .syed-link-all:hover { opacity: .9; background: var(--grad-warm); }
+    .theme-toggle {
+      width: 34px; height: 34px; border-radius: 999px;
+      display: inline-flex; align-items: center; justify-content: center;
+      background: var(--bg-soft); border: 1px solid var(--border);
+      color: var(--ink-2); cursor: pointer; font-size: 1rem;
+      transition: background .15s, color .15s, transform .2s;
+      margin-left: 4px; flex-shrink: 0;
     }
-    .gh-btn:hover { border-color: rgba(255,255,255,0.2); color: var(--text-h); background: rgba(255,255,255,0.07); }
+    .theme-toggle:hover { color: var(--ink); transform: rotate(15deg); }
+    .theme-toggle .sun, .theme-toggle .moon { display: none; }
+    [data-theme="light"] .theme-toggle .moon { display: inline; }
+    [data-theme="dark"] .theme-toggle .sun { display: inline; }
+    @media(max-width:760px){
+      .syed-links { display: none; }
+      .syed-bar { padding: 0 14px; }
+    }
 
-    /* ── Hero ────────────────────────────────────── */
-    .hero { padding: 96px 0 72px; text-align: center; }
-
+    /* ── Hero ──────────────────────────────────────────────── */
+    .hero { padding: 96px 0 56px; text-align: left; max-width: 920px; }
     .hero-pill {
       display: inline-flex; align-items: center; gap: 8px;
-      padding: 5px 14px; border-radius: 100px;
-      background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.28);
-      font-size: 11px; font-weight: 600; color: #b39dfc;
-      text-transform: uppercase; letter-spacing: 0.12em;
-      margin-bottom: 22px;
+      padding: 7px 14px; border-radius: 999px;
+      background: var(--bg-2); border: 1px solid var(--border);
+      font-size: .72rem; font-weight: 700; color: var(--ink-2);
+      text-transform: uppercase; letter-spacing: .14em;
+      margin-bottom: 28px; box-shadow: var(--shadow);
     }
-    .pulse {
-      width: 6px; height: 6px; border-radius: 50%; background: #a78bfa;
-      animation: pulse 2.2s ease-in-out infinite;
+    .hero-pill::before {
+      content: ''; width: 7px; height: 7px; border-radius: 50%;
+      background: var(--grad-warm);
+      box-shadow: 0 0 12px rgba(240,46,101,.6);
     }
-    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.65)} }
-
     .hero-h {
-      font-size: clamp(44px, 6.5vw, 70px);
-      font-weight: 800; letter-spacing: -2.5px; line-height: 1.04;
-      color: var(--text-h); margin-bottom: 18px;
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      font-size: clamp(48px, 9vw, 104px);
+      font-weight: 800; letter-spacing: -.04em; line-height: .98;
+      color: var(--ink); margin-bottom: 22px;
     }
-    .hero-h span {
-      background: linear-gradient(135deg, #7c3aed 0%, #6366f1 40%, #3b82f6 100%);
-      background-size: 200% auto;
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-      animation: shine 5s linear infinite;
+    .hero-h .grad {
+      background: var(--grad-warm);
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+      color: transparent;
     }
-    @keyframes shine { to { background-position: 200% center; } }
-
+    .hero-h .grad-cool {
+      background: var(--grad-iris);
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+      color: transparent;
+    }
     .hero-p {
-      font-size: 16px; color: var(--text);
-      max-width: 460px; margin: 0 auto 38px; line-height: 1.78;
+      font-size: clamp(16px, 1.5vw, 19px); color: var(--ink-2);
+      max-width: 560px; line-height: 1.65; margin-bottom: 36px;
     }
 
-    .stats { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+    .stats {
+      display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 8px;
+    }
     .stat {
-      display: flex; align-items: center; gap: 10px;
-      padding: 11px 20px; border-radius: 11px;
-      border: 1px solid var(--border);
-      background: var(--card);
-      backdrop-filter: blur(12px);
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 22px; border-radius: var(--r);
+      background: var(--card); border: 1px solid var(--border);
+      box-shadow: var(--shadow);
     }
-    .stat-n { font-size: 21px; font-weight: 800; color: var(--text-h); letter-spacing: -1px; line-height: 1; }
-    .stat-l { font-size: 12px; color: var(--text-d); font-weight: 500; }
+    .stat-n {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      font-size: 28px; font-weight: 800; color: var(--ink);
+      letter-spacing: -.04em; line-height: 1;
+    }
+    .stat-l { font-size: 13px; color: var(--ink-3); font-weight: 500; line-height: 1.2; }
 
-    /* ── Filter ──────────────────────────────────── */
-    .filter { padding-bottom: 28px; }
+    /* ── Filter ────────────────────────────────────────────── */
+    .filter { padding: 56px 0 28px; }
     .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
     .fb {
-      padding: 7px 16px; border-radius: 100px;
-      border: 1px solid var(--border);
-      background: transparent; color: var(--text);
-      font-size: 13px; font-weight: 500; cursor: pointer;
-      font-family: inherit;
-      transition: all 0.2s;
+      padding: 9px 18px; border-radius: 999px;
+      border: 1px solid var(--border); background: var(--card);
+      color: var(--ink-2); font-size: 13px; font-weight: 600;
+      cursor: pointer; font-family: inherit;
+      transition: all .2s;
     }
-    .fb:hover { border-color: rgba(255,255,255,0.2); color: var(--text-h); }
-    .fb.active { background: var(--grad); border-color: transparent; color: #fff; }
+    .fb:hover { border-color: var(--border-strong); color: var(--ink); transform: translateY(-1px); }
+    .fb.active {
+      background: var(--ink); color: var(--bg-2);
+      border-color: var(--ink);
+      box-shadow: 0 6px 18px -6px var(--ink);
+    }
     .nsearch-wrap { position: relative; margin-left: auto; }
     .nsearch {
-      background: rgba(255,255,255,0.05); border: 1px solid var(--border);
-      color: var(--text-h); padding: 7px 32px 7px 14px;
-      border-radius: 100px; font-size: 13px; font-family: inherit;
-      outline: none; width: 200px; transition: border-color 0.2s, width 0.2s;
+      background: var(--card); border: 1px solid var(--border);
+      color: var(--ink); padding: 9px 34px 9px 16px;
+      border-radius: 999px; font-size: 13px; font-family: inherit;
+      outline: none; width: 220px;
+      transition: border-color .2s, width .2s, box-shadow .2s;
     }
-    .nsearch:focus { border-color: rgba(124,58,237,0.5); width: 240px; }
-    .nsearch::placeholder { color: var(--text-d); }
+    .nsearch:focus { border-color: var(--ring); width: 260px; box-shadow: 0 0 0 4px color-mix(in srgb, var(--ring) 25%, transparent); }
+    .nsearch::placeholder { color: var(--muted); }
     .nsearch-clear {
-      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
-      background: none; border: none; color: var(--text-d); cursor: pointer;
-      font-size: 16px; line-height: 1; padding: 0 2px;
-      display: none;
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; color: var(--ink-3); cursor: pointer;
+      font-size: 18px; line-height: 1; padding: 0 2px; display: none;
     }
     .nsearch-clear.show { display: block; }
-    .nsearch-clear:hover { color: var(--text-h); }
+    .nsearch-clear:hover { color: var(--ink); }
 
-    /* ── Grid ────────────────────────────────────── */
+    /* ── Grid ──────────────────────────────────────────────── */
     .grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      padding-bottom: 90px;
+      gap: 18px;
+      padding-bottom: 96px;
     }
-    @media (max-width: 900px) { .grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 540px) { .grid { grid-template-columns: 1fr; } }
+    @media (max-width: 920px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
 
-    /* ── Card ────────────────────────────────────── */
+    /* ── Project Card (Storytale-style) ────────────────────── */
     .card {
-      position: relative;
-      border-radius: var(--r);
-      border: 1px solid var(--border);
-      background: var(--card);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      padding: 20px;
-      display: flex; flex-direction: column; gap: 13px;
-      overflow: hidden;
+      position: relative; border-radius: var(--r-lg);
+      background: var(--card); border: 1px solid var(--border);
+      padding: 22px;
+      display: flex; flex-direction: column; gap: 14px;
+      overflow: hidden; box-shadow: var(--shadow);
       transition:
-        transform 0.28s cubic-bezier(.17,.67,.3,1.15),
-        border-color 0.22s, box-shadow 0.28s,
-        opacity 0.45s ease, translate 0.45s ease;
-      opacity: 0;
-      translate: 0 20px;
+        transform .35s cubic-bezier(.17,.67,.3,1.15),
+        box-shadow .3s ease,
+        border-color .25s ease,
+        opacity .5s ease, translate .5s ease;
+      opacity: 0; translate: 0 24px;
     }
     .card.in { opacity: 1; translate: 0 0; }
     .card.off { display: none; }
-
     .card:hover {
-      transform: translateY(-6px) !important;
-      border-color: rgba(124,58,237,0.55);
-      box-shadow:
-        0 0 0 1px rgba(124,58,237,0.22),
-        0 22px 56px rgba(124,58,237,0.2),
-        0 6px 16px rgba(0,0,0,0.5);
+      transform: translateY(-8px) !important;
+      box-shadow: var(--shadow-h);
+      border-color: var(--border-strong);
+    }
+    /* gradient tab on top */
+    .card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+      background: var(--card-grad, var(--grad-warm));
+      opacity: .9;
     }
 
-    /* top color stripe */
-    .stripe {
-      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    .c-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+    .c-ico {
+      width: 50px; height: 50px; border-radius: 14px;
+      background: var(--card-grad, var(--grad-warm));
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 24px; line-height: 1;
+      box-shadow: 0 8px 20px -8px color-mix(in srgb, var(--ink) 25%, transparent);
     }
-    .sp { background: linear-gradient(90deg, #7c3aed, #a855f7); }
-    .sb { background: #3b82f6; }
-    .st { background: #14b8a6; }
-    .sa { background: linear-gradient(90deg, #f59e0b, #ef4444); }
-
-    .c-top {
-      display: flex; align-items: flex-start;
-      justify-content: space-between; gap: 8px;
-    }
-    .c-ico { font-size: 24px; line-height: 1; }
     .c-num {
-      font-size: 10px; font-weight: 600; color: var(--text-d);
-      padding: 2px 8px; border-radius: 100px;
-      border: 1px solid var(--border);
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      font-size: 12px; font-weight: 700; color: var(--ink-3);
+      padding: 4px 10px; border-radius: 999px;
+      background: var(--bg-soft); border: 1px solid var(--border);
+      letter-spacing: -.01em;
     }
-
     .c-title {
-      font-size: 17px; font-weight: 700; color: var(--text-h);
-      letter-spacing: -0.4px; line-height: 1.25;
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      font-size: 21px; font-weight: 800; color: var(--ink);
+      letter-spacing: -.025em; line-height: 1.18; margin-top: 4px;
     }
-    .c-desc {
-      font-size: 13px; color: var(--text);
-      line-height: 1.68; flex: 1;
-    }
+    .c-desc { font-size: 14px; color: var(--ink-2); line-height: 1.62; flex: 1; }
 
-    .c-tags { display: flex; flex-wrap: wrap; gap: 5px; }
-    .tag {
-      font-size: 11px; font-weight: 500;
-      padding: 2px 9px; border-radius: 100px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.09);
-      color: var(--text);
+    .c-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag, .cat {
+      font-size: 11.5px; font-weight: 600;
+      padding: 3px 10px; border-radius: 999px;
+      letter-spacing: -.005em;
     }
-    .cat {
-      font-size: 11px; font-weight: 600;
-      padding: 2px 9px; border-radius: 100px;
+    .tag { background: var(--chip); color: var(--chip-ink); }
+    .cat { color: #fff; }
+    .cp { background: var(--grad-iris); }
+    .cb { background: var(--grad-mint); }
+    .ct { background: var(--grad-pink); }
+    .ca { background: var(--grad-sun); }
+
+    .c-links { display: flex; gap: 8px; margin-top: 4px; }
+    .lnk {
+      flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 10px 14px; border-radius: 12px;
+      font-size: 13.5px; font-weight: 700;
+      text-decoration: none; transition: all .2s; white-space: nowrap;
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     }
-    .cp { background: rgba(124,58,237,0.16); color: #c084fc; }
-    .cb { background: rgba(59,130,246,0.16); color: #60a5fa; }
-    .ct { background: rgba(20,184,166,0.16); color: #2dd4bf; }
-    .ca { background: rgba(245,158,11,0.16); color: #fbbf24; }
-    /* ── Artifacts section ───────────────────────────── */
-    .artifacts-section { padding-bottom: 90px; }
+    .lp { background: var(--ink); color: var(--bg-2); border: 1px solid var(--ink); }
+    .lp:hover { transform: translateY(-1px); box-shadow: 0 10px 22px -8px var(--ink); }
+    .lg { background: transparent; color: var(--ink); border: 1px solid var(--border-strong); }
+    .lg:hover { background: var(--bg-soft); }
+
+    /* per-card gradient palette assignments */
+    .g-warm { --card-grad: var(--grad-warm); }
+    .g-cool { --card-grad: var(--grad-iris); }
+    .g-mint { --card-grad: var(--grad-mint); }
+    .g-pink { --card-grad: var(--grad-pink); }
+    .g-sun  { --card-grad: var(--grad-sun); }
+    .g-cyan { --card-grad: var(--grad-cool); }
+
+    /* ── Artifacts ─────────────────────────────────────────── */
+    .artifacts-section { padding-bottom: 96px; }
     .artifacts-hdr {
-      display: flex; align-items: baseline; gap: 12px;
-      margin-bottom: 14px; padding-top: 8px;
+      display: flex; align-items: baseline; gap: 14px;
+      margin-bottom: 18px;
     }
     .artifacts-title {
-      font-size: 11px; font-weight: 700; color: var(--text);
-      text-transform: uppercase; letter-spacing: 0.12em;
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      font-size: 12px; font-weight: 800; color: var(--ink);
+      text-transform: uppercase; letter-spacing: .16em;
     }
-    .artifacts-sub { font-size: 13px; color: var(--text-d); }
-    .artifacts-list { display: flex; flex-direction: column; gap: 10px; }
+    .artifacts-sub { font-size: 14px; color: var(--ink-3); }
+    .artifacts-list { display: flex; flex-direction: column; gap: 12px; }
     .a-card {
-      border-radius: var(--r); border: 1px solid var(--border);
-      background: var(--card); backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      padding: 16px 20px;
-      display: flex; align-items: center; gap: 16px;
-      transition: border-color 0.22s, box-shadow 0.22s;
+      border-radius: var(--r-lg); border: 1px solid var(--border);
+      background: var(--card); box-shadow: var(--shadow);
+      padding: 18px 22px;
+      display: flex; align-items: center; gap: 18px;
+      transition: box-shadow .25s, transform .25s, border-color .2s;
     }
-    .a-card:hover { border-color: rgba(148,163,184,0.28); box-shadow: 0 4px 16px rgba(0,0,0,0.25); }
-    .a-ico { font-size: 22px; flex-shrink: 0; }
+    .a-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-h); border-color: var(--border-strong); }
+    .a-ico {
+      width: 46px; height: 46px; border-radius: 13px;
+      background: var(--grad-warm);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
+    }
     .a-body { flex: 1; min-width: 0; }
-    .a-title { font-size: 15px; font-weight: 700; color: var(--text-h); letter-spacing: -0.3px; }
-    .a-desc { font-size: 13px; color: var(--text); line-height: 1.6; margin-top: 4px; }
-    .a-meta { display: flex; align-items: center; gap: 8px; margin-top: 9px; flex-wrap: wrap; }
-    .a-updated { font-size: 11px; font-weight: 500; color: var(--text-d); display: flex; align-items: center; gap: 5px; }
-    .live-dot { width: 5px; height: 5px; border-radius: 50%; background: #22c55e; animation: pulse 2.2s ease-in-out infinite; flex-shrink: 0; }
+    .a-title { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 16px; font-weight: 800; color: var(--ink); letter-spacing: -.02em; }
+    .a-desc { font-size: 13.5px; color: var(--ink-2); line-height: 1.6; margin-top: 4px; }
+    .a-meta { display: flex; align-items: center; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+    .a-updated { font-size: 12px; font-weight: 600; color: var(--ink-3); display: inline-flex; align-items: center; gap: 6px; }
+    .live-dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 8px #22c55e; animation: live 2.2s ease-in-out infinite; flex-shrink: 0; }
+    @keyframes live { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
     .a-actions { flex-shrink: 0; }
+    .a-actions .lnk { padding: 9px 18px; }
 
-    .c-links { display: flex; gap: 8px; margin-top: 2px; }
-    .lnk {
-      flex: 1; display: flex; align-items: center;
-      justify-content: center; gap: 5px;
-      padding: 8px 12px; border-radius: 8px;
-      font-size: 13px; font-weight: 600;
-      text-decoration: none;
-      transition: all 0.18s; white-space: nowrap;
-    }
-    .lp { background: var(--grad); color: #fff; }
-    .lp:hover { opacity: 0.82; }
-    .lg { border: 1px solid var(--border); background: transparent; color: var(--text); }
-    .lg:hover { border-color: rgba(255,255,255,0.22); color: var(--text-h); background: rgba(255,255,255,0.05); }
-
-    /* ── Footer ──────────────────────────────────── */
+    /* ── Footer ────────────────────────────────────────────── */
     footer {
       position: relative; z-index: 1;
       border-top: 1px solid var(--border);
-      padding: 22px 24px; text-align: center;
+      padding: 28px 24px; text-align: center;
+      background: color-mix(in srgb, var(--bg-2) 60%, transparent);
     }
-    footer p { font-size: 13px; color: var(--text-d); }
-    footer a { color: var(--text); text-decoration: none; transition: color 0.18s; }
-    footer a:hover { color: var(--text-h); }
+    footer p { font-size: 13.5px; color: var(--ink-3); }
+    footer a { color: var(--ink-2); font-weight: 600; text-decoration: none; transition: color .15s; }
+    footer a:hover { color: var(--ink); }
 
-    /* ── Scrollbar ───────────────────────────────── */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); }
-  </style>
-  <style>
-.syed-bar{display:flex;align-items:center;gap:10px;padding:0 18px;height:44px;background:rgba(6,6,16,.9);backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);border-bottom:1px solid rgba(139,92,246,.18);position:sticky;top:0;z-index:9999;flex-shrink:0;font-family:'Inter',system-ui,sans-serif;box-shadow:0 1px 24px rgba(139,92,246,.06)}
-.syed-bar-logo{display:flex;align-items:center;gap:8px;text-decoration:none;flex-shrink:0;transition:opacity .15s}
-.syed-bar-logo:hover{opacity:.75}
-.syed-mark{width:26px;height:26px;background:linear-gradient(135deg,#22d3ee,#a855f7);border-radius:7px;display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:900;color:#fff;flex-shrink:0;animation:syed-glow 4s ease-in-out infinite}
-@keyframes syed-glow{0%,100%{box-shadow:0 0 0 0 rgba(168,85,247,0),0 2px 8px rgba(34,211,238,.2)}50%{box-shadow:0 0 0 3px rgba(168,85,247,.2),0 2px 20px rgba(34,211,238,.4)}}
-.syed-name{font-size:.84rem;font-weight:700;color:#fff;letter-spacing:-.02em}
-.syed-divider{width:1px;height:14px;background:rgba(255,255,255,.08);flex-shrink:0;margin:0 2px}
-.syed-project{font-size:.71rem;color:rgba(255,255,255,.3);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0;letter-spacing:.01em}
-.syed-links{display:flex;align-items:center;margin-left:auto;flex-shrink:0;gap:1px}
-.syed-link{font-size:.69rem;color:rgba(255,255,255,.35);text-decoration:none;padding:4px 10px;border-radius:99px;transition:color .12s,background .12s;white-space:nowrap;font-weight:500;letter-spacing:.01em}
-.syed-link:hover{color:rgba(255,255,255,.8);background:rgba(255,255,255,.05)}
-.syed-link-all{font-size:.69rem;font-weight:600;text-decoration:none;padding:4px 12px;border-radius:99px;background:linear-gradient(135deg,rgba(34,211,238,.12),rgba(168,85,247,.12));border:1px solid rgba(168,85,247,.25);color:rgba(255,255,255,.7);transition:all .15s;white-space:nowrap;letter-spacing:.01em}
-.syed-link-all:hover{background:linear-gradient(135deg,rgba(34,211,238,.2),rgba(168,85,247,.2));border-color:rgba(168,85,247,.5);color:#fff;box-shadow:0 0 16px rgba(168,85,247,.2)}
-@media(max-width:640px){.syed-links{display:none}}
+    /* ── Scrollbar ─────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--ink-3); }
   </style>
 </head>
 <body>
+
+<!-- SYED BRAND BAR -->
 <div class="syed-bar">
-  <a class="syed-bar-logo" href="https://syahmedu.github.io/nexus/" target="_blank" rel="noopener"><span class="syed-mark">S</span><span class="syed-name">Syed</span></a>
+  <a class="syed-bar-logo" href="#" aria-label="Syed">
+    <span class="syed-mark">S</span>
+    <span class="syed-name">Syed</span>
+  </a>
   <span class="syed-divider"></span>
-  <span class="syed-project">All Projects</span>
+  <span class="syed-project">Nexus · Portfolio</span>
   <nav class="syed-links">
     <a class="syed-link" href="https://syahmedu.github.io/journaltime/" target="_blank" rel="noopener">JournalTime</a>
     <a class="syed-link" href="https://syahmedu.github.io/cadence/" target="_blank" rel="noopener">Cadence</a>
     <a class="syed-link" href="https://scalescope.vercel.app" target="_blank" rel="noopener">ScaleScope</a>
     <a class="syed-link" href="https://ideabox-six.vercel.app" target="_blank" rel="noopener">IdeaBox</a>
     <a class="syed-link" href="https://career-compass-production-df45.up.railway.app" target="_blank" rel="noopener">Career Compass</a>
+    <a class="syed-link syed-link-all" href="https://github.com/SyAhmedU" target="_blank" rel="noopener">GitHub →</a>
   </nav>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle light/dark">
+    <span class="sun">☀️</span><span class="moon">🌙</span>
+  </button>
 </div>
 
-<!-- Background -->
-<div class="bg">
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
+<!-- Decorative background -->
+<div class="bg-fx" aria-hidden="true">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
   <div class="dots"></div>
 </div>
-
-<!-- Header -->
-<header>
-  <div class="hdr">
-    <a class="logo" href="#">
-      <div class="logo-mark">N</div>
-      <span class="logo-word">ne<em>xus</em></span>
-    </a>
-    <a class="gh-btn" href="https://github.com/SyAhmedU" target="_blank" rel="noopener">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
-      </svg>
-      SyAhmedU
-    </a>
-  </div>
-</header>
 
 <div class="wrap">
 
   <!-- Hero -->
   <section class="hero">
-    <div class="hero-pill"><span class="pulse"></span>Portfolio</div>
-    <h1 class="hero-h">Syed <span>Asrar</span></h1>
-    <p class="hero-p">AI tools, research technology, and web applications — built to solve real problems.</p>
+    <div class="hero-pill">Portfolio · 12 Projects</div>
+    <h1 class="hero-h">Building <span class="grad">tools</span><br>for <span class="grad-cool">research &amp; work.</span></h1>
+    <p class="hero-p">AI tools, research technology, and web applications — designed to remove the friction between an idea and the thing that helps people.</p>
     <div class="stats">
-      <div class="stat">
-        <span class="stat-n">10</span>
-        <span class="stat-l">Projects</span>
-      </div>
-      <div class="stat">
-        <span class="stat-n">4</span>
-        <span class="stat-l">AI&#8209;powered</span>
-      </div>
-      <div class="stat">
-        <span class="stat-n">10</span>
-        <span class="stat-l">Live&nbsp;&amp;&nbsp;deployed</span>
-      </div>
+      <div class="stat"><span class="stat-n">12</span><span class="stat-l">Projects<br>shipped</span></div>
+      <div class="stat"><span class="stat-n">6</span><span class="stat-l">AI-powered<br>features</span></div>
+      <div class="stat"><span class="stat-n">12</span><span class="stat-l">Live &amp;<br>deployed</span></div>
     </div>
   </section>
 
@@ -438,18 +463,14 @@
   <div class="grid" id="grid">
 
     <!-- ResearchFlow -->
-    <div class="card" data-cats="ai research">
-      <div class="stripe sp"></div>
+    <div class="card g-cool" data-cats="ai research">
       <div class="c-top"><span class="c-ico">🔬</span><span class="c-num">#08</span></div>
       <div class="c-title">ResearchFlow</div>
       <div class="c-desc">AI-powered 10-stage wizard that walks researchers from raw idea to publication-ready methodology — question, theory, hypotheses, design, and full analysis plan.</div>
       <div class="c-tags">
         <span class="cat cp">AI Tool</span>
         <span class="cat ct">Research</span>
-        <span class="tag">React</span>
-        <span class="tag">TypeScript</span>
-        <span class="tag">Gemini AI</span>
-        <span class="tag">Python</span>
+        <span class="tag">React</span><span class="tag">TypeScript</span><span class="tag">Gemini AI</span>
       </div>
       <div class="c-links">
         <a class="lnk lp" href="https://researchflow-alpha.vercel.app" target="_blank" rel="noopener">Open ↗</a>
@@ -458,17 +479,13 @@
     </div>
 
     <!-- KarmaMap -->
-    <div class="card" data-cats="ai">
-      <div class="stripe sp"></div>
+    <div class="card g-cool" data-cats="ai">
       <div class="c-top"><span class="c-ico">🗺️</span><span class="c-num">#03</span></div>
       <div class="c-title">KarmaMap</div>
       <div class="c-desc">Interactive D3 treemap visualising AI's impact on Indian job roles. Claude AI scores each role by growth rate, salary, exposure level, and future outlook.</div>
       <div class="c-tags">
         <span class="cat cp">AI Tool</span>
-        <span class="tag">React</span>
-        <span class="tag">D3.js</span>
-        <span class="tag">Claude AI</span>
-        <span class="tag">Express</span>
+        <span class="tag">React</span><span class="tag">D3.js</span><span class="tag">Claude AI</span>
       </div>
       <div class="c-links">
         <a class="lnk lp" href="https://karmamap-git-master-syahmedus-projects.vercel.app" target="_blank" rel="noopener">Open ↗</a>
@@ -477,17 +494,14 @@
     </div>
 
     <!-- WordMap -->
-    <div class="card" data-cats="ai research">
-      <div class="stripe st"></div>
+    <div class="card g-pink" data-cats="ai research">
       <div class="c-top"><span class="c-ico">🌐</span><span class="c-num">#04</span></div>
       <div class="c-title">WordMap</div>
-      <div class="c-desc">Research intelligence treemap for 106 social-science terms. Features Opportunity Scores, live OpenAlex paper &amp; author data, AI Brief, and a White Space Finder.</div>
+      <div class="c-desc">Research intelligence treemap for 106 social-science terms. Opportunity Scores, live OpenAlex paper &amp; author data, AI Brief, and a White Space Finder.</div>
       <div class="c-tags">
         <span class="cat ct">Research</span>
         <span class="cat cp">AI Tool</span>
-        <span class="tag">D3.js</span>
-        <span class="tag">OpenAlex API</span>
-        <span class="tag">Claude AI</span>
+        <span class="tag">D3.js</span><span class="tag">OpenAlex</span><span class="tag">Claude AI</span>
       </div>
       <div class="c-links">
         <a class="lnk lp" href="https://syahmedu.github.io/wordmap/" target="_blank" rel="noopener">Open ↗</a>
@@ -496,17 +510,13 @@
     </div>
 
     <!-- TaskFlow -->
-    <div class="card" data-cats="web">
-      <div class="stripe sb"></div>
+    <div class="card g-mint" data-cats="web">
       <div class="c-top"><span class="c-ico">✅</span><span class="c-num">#01</span></div>
       <div class="c-title">TaskFlow</div>
       <div class="c-desc">Full-stack team task manager with JWT auth, role-based access for managers and mentors, and multi-assignee task workflows. Deployed on Railway.</div>
       <div class="c-tags">
         <span class="cat cb">Web App</span>
-        <span class="tag">React</span>
-        <span class="tag">Express</span>
-        <span class="tag">JWT Auth</span>
-        <span class="tag">Node.js</span>
+        <span class="tag">React</span><span class="tag">Express</span><span class="tag">JWT</span>
       </div>
       <div class="c-links">
         <a class="lnk lp" href="https://task-manager-production-5683.up.railway.app" target="_blank" rel="noopener">Open ↗</a>
@@ -515,16 +525,14 @@
     </div>
 
     <!-- JournalTime -->
-    <div class="card" data-cats="research">
-      <div class="stripe st"></div>
+    <div class="card g-pink" data-cats="research">
       <div class="c-top"><span class="c-ico">📰</span><span class="c-num">#05</span></div>
       <div class="c-title">JournalTime</div>
-      <div class="c-desc">Database of 200+ Scopus journals with real submission-to-decision turnaround times. Filter by research field, quartile, and processing speed to find your venue.</div>
+      <div class="c-desc">Research writing workspace for social-science academics. Research Compass (AI gap finder), Article Developer, and 2,000+ Scopus journals with real wait times.</div>
       <div class="c-tags">
         <span class="cat ct">Research</span>
-        <span class="tag">D3.js</span>
-        <span class="tag">Vanilla JS</span>
-        <span class="tag">Scopus Data</span>
+        <span class="cat cp">AI Tool</span>
+        <span class="tag">D3.js</span><span class="tag">Claude</span><span class="tag">Groq</span>
       </div>
       <div class="c-links">
         <a class="lnk lp" href="https://syahmedu.github.io/journaltime" target="_blank" rel="noopener">Open ↗</a>
@@ -533,16 +541,13 @@
     </div>
 
     <!-- ScaleScope -->
-    <div class="card" data-cats="ai research">
-      <div class="stripe st"></div>
+    <div class="card g-pink" data-cats="ai research">
       <div class="c-top"><span class="c-ico">📐</span><span class="c-num">#09</span></div>
       <div class="c-title">ScaleScope</div>
-      <div class="c-desc">Library of 89 validated scales across 5 domains — including a 56-item demographics bank — for social science research. Browse, get AI-powered recommendations, and compare scales with APA 7th citations.</div>
+      <div class="c-desc">Library of 89 validated measurement scales across 5 social-science domains — browse, get AI recommendations, and compare scales with APA 7th citations.</div>
       <div class="c-tags">
         <span class="cat ct">Research</span>
-        <span class="tag">Claude AI</span>
-        <span class="tag">React</span>
-        <span class="tag">TypeScript</span>
+        <span class="tag">Groq</span><span class="tag">React</span><span class="tag">TypeScript</span>
       </div>
       <div class="c-links">
         <a class="lnk lp" href="https://scalescope.vercel.app" target="_blank" rel="noopener">Open ↗</a>
@@ -551,17 +556,14 @@
     </div>
 
     <!-- Career Compass -->
-    <div class="card" data-cats="education research">
-      <div class="stripe st"></div>
+    <div class="card g-sun" data-cats="education research">
       <div class="c-top"><span class="c-ico">🧭</span><span class="c-num">#12</span></div>
       <div class="c-title">Career Compass</div>
-      <div class="c-desc">Evidence-based 8-stage career counselling instrument for Class 10 students (Tamil Nadu / CBSE / ICSE). 115+ items covering RIASEC interests, Big Five personality, aptitudes, learning styles, subject affinity, and values — ends in a personalised stream-and-cluster report with action plan, downloadable as PDF.</div>
+      <div class="c-desc">Evidence-based 8-stage career counselling instrument for Class 10 students. 115+ items covering RIASEC, Big Five, aptitudes, and values — ends in a personalised stream report.</div>
       <div class="c-tags">
         <span class="cat ca">Education</span>
         <span class="cat ct">Research</span>
-        <span class="tag">Express</span>
-        <span class="tag">Vanilla JS</span>
-        <span class="tag">html2pdf</span>
+        <span class="tag">Express</span><span class="tag">html2pdf</span>
       </div>
       <div class="c-links">
         <a class="lnk lp" href="https://career-compass-production-df45.up.railway.app" target="_blank" rel="noopener">Open ↗</a>
@@ -570,16 +572,13 @@
     </div>
 
     <!-- IdeaBox -->
-    <div class="card" data-cats="web">
-      <div class="stripe sb"></div>
+    <div class="card g-mint" data-cats="web">
       <div class="c-top"><span class="c-ico">💡</span><span class="c-num">#11</span></div>
       <div class="c-title">IdeaBox</div>
-      <div class="c-desc">Mobile-first idea capture app for logging thoughts on the go. Text and voice input, category tagging, full-text search, and server-side persistence — so ideas sync across every device.</div>
+      <div class="c-desc">Mobile-first idea capture app for thoughts on the go. Text and voice input, category tagging, full-text search, and server-side persistence across devices.</div>
       <div class="c-tags">
         <span class="cat cb">Web</span>
-        <span class="tag">Express</span>
-        <span class="tag">Vanilla JS</span>
-        <span class="tag">Vercel</span>
+        <span class="tag">Express</span><span class="tag">Vanilla JS</span><span class="tag">Vercel</span>
       </div>
       <div class="c-links">
         <a class="lnk lp" href="https://ideabox-six.vercel.app" target="_blank" rel="noopener">Open ↗</a>
@@ -588,16 +587,13 @@
     </div>
 
     <!-- Cadence -->
-    <div class="card" data-cats="ai research">
-      <div class="stripe st"></div>
+    <div class="card g-pink" data-cats="research">
       <div class="c-top"><span class="c-ico">🎵</span><span class="c-num">#10</span></div>
       <div class="c-title">Cadence</div>
-      <div class="c-desc">Immersive survey tool built for longitudinal research. One question at a time, Typeform-style flow, milestone celebrations, keyboard shortcuts, and temporal wave tracking with participant codes. Exports clean Excel files.</div>
+      <div class="c-desc">Immersive survey tool for longitudinal research. One-question-at-a-time flow, milestone celebrations, keyboard shortcuts, and temporal wave tracking with participant codes.</div>
       <div class="c-tags">
         <span class="cat ct">Research</span>
-        <span class="tag">Vanilla JS</span>
-        <span class="tag">SheetJS</span>
-        <span class="tag">Single File</span>
+        <span class="tag">Vanilla JS</span><span class="tag">SheetJS</span><span class="tag">Single File</span>
       </div>
       <div class="c-links">
         <a class="lnk lp" href="https://syahmedu.github.io/cadence/" target="_blank" rel="noopener">Open ↗</a>
@@ -606,16 +602,13 @@
     </div>
 
     <!-- Timetable Generator -->
-    <div class="card" data-cats="education">
-      <div class="stripe sa"></div>
+    <div class="card g-sun" data-cats="education">
       <div class="c-top"><span class="c-ico">📅</span><span class="c-num">#07</span></div>
       <div class="c-title">Timetable Generator</div>
       <div class="c-desc">Constraint-based academic timetable generator for 11 classes across 3 departments. Respects mentor availability, subject caps, and AY 2026–27 scheduling rules.</div>
       <div class="c-tags">
         <span class="cat ca">Education</span>
-        <span class="tag">Next.js</span>
-        <span class="tag">TypeScript</span>
-        <span class="tag">React 19</span>
+        <span class="tag">Next.js</span><span class="tag">TypeScript</span><span class="tag">React 19</span>
       </div>
       <div class="c-links">
         <a class="lnk lp" href="https://syahmedu.github.io/timetable-generator/" target="_blank" rel="noopener">Open ↗</a>
@@ -624,20 +617,32 @@
     </div>
 
     <!-- Bachelor Meal Plan -->
-    <div class="card" data-cats="lifestyle">
-      <div class="stripe sa"></div>
+    <div class="card g-warm" data-cats="lifestyle">
       <div class="c-top"><span class="c-ico">🍳</span><span class="c-num">#06</span></div>
       <div class="c-title">Bachelor Meal Plan</div>
       <div class="c-desc">36 halal recipes with weekly meal planning, shopping list generation, and portion guidance. Mobile-first and fully offline via localStorage — no sign-up needed.</div>
       <div class="c-tags">
         <span class="cat ca">Lifestyle</span>
-        <span class="tag">Vanilla JS</span>
-        <span class="tag">localStorage</span>
-        <span class="tag">Mobile-first</span>
+        <span class="tag">Vanilla JS</span><span class="tag">localStorage</span>
       </div>
       <div class="c-links">
         <a class="lnk lp" href="https://syahmedu.github.io/bachelor-meal-plan/" target="_blank" rel="noopener">Open ↗</a>
         <a class="lnk lg" href="https://github.com/SyAhmedU/bachelor-meal-plan" target="_blank" rel="noopener">Code</a>
+      </div>
+    </div>
+
+    <!-- Nexus (self) -->
+    <div class="card g-warm" data-cats="web">
+      <div class="c-top"><span class="c-ico">🧬</span><span class="c-num">#02</span></div>
+      <div class="c-title">Nexus</div>
+      <div class="c-desc">The portfolio you're looking at right now. Single-file HTML with light/dark theming, filterable project grid, and search — a living index of everything built.</div>
+      <div class="c-tags">
+        <span class="cat cb">Web</span>
+        <span class="tag">Single File</span><span class="tag">Vanilla JS</span>
+      </div>
+      <div class="c-links">
+        <a class="lnk lp" href="https://syahmedu.github.io/nexus/" target="_blank" rel="noopener">Open ↗</a>
+        <a class="lnk lg" href="https://github.com/SyAhmedU/nexus" target="_blank" rel="noopener">Code</a>
       </div>
     </div>
 
@@ -650,12 +655,11 @@
       <span class="artifacts-sub">Living documents &amp; one-off tools that get updated over time</span>
     </div>
     <div class="artifacts-list">
-
       <div class="a-card">
         <span class="a-ico">📚</span>
         <div class="a-body">
           <div class="a-title">IO Psychology Research Tracker</div>
-          <div class="a-desc">26 papers from Journal of Applied Psychology, Personnel Psychology, and J. Organizational Behavior (Feb–May 2026). Filter by journal, search by keyword, and expand for Claude AI–generated key takeaways.</div>
+          <div class="a-desc">26 papers from Journal of Applied Psychology, Personnel Psychology, and J. Organizational Behavior (Feb–May 2026). Filter by journal, search by keyword, and expand for Claude AI–generated takeaways.</div>
           <div class="a-meta">
             <span class="tag">Claude AI</span>
             <span class="tag">Vanilla JS</span>
@@ -663,26 +667,34 @@
           </div>
         </div>
         <div class="a-actions">
-          <a class="lnk lp" href="io_psych_tracker.html" target="_blank" rel="noopener" style="width:auto">Open ↗</a>
+          <a class="lnk lp" href="io_psych_tracker.html" target="_blank" rel="noopener">Open ↗</a>
         </div>
       </div>
-
     </div>
   </div>
 
 </div>
 
-<!-- Footer -->
 <footer>
   <p>
-    Built by Syed Asrar &nbsp;·&nbsp;
-    <a href="mailto:asrarsaa@gmail.com">asrarsaa@gmail.com</a>
-    &nbsp;·&nbsp;
+    Built by <a href="https://github.com/SyAhmedU" target="_blank" rel="noopener">Syed Asrar</a> ·
+    <a href="mailto:asrarsaa@gmail.com">asrarsaa@gmail.com</a> ·
     <a href="https://github.com/SyAhmedU" target="_blank" rel="noopener">github.com/SyAhmedU</a>
   </p>
 </footer>
 
 <script>
+  // ── Theme toggle ────────────────────────────────────────
+  const toggle = document.getElementById('themeToggle');
+  function setTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    try { localStorage.setItem('syed-theme', t); } catch(e) {}
+  }
+  toggle?.addEventListener('click', () => {
+    const cur = document.documentElement.getAttribute('data-theme') || 'light';
+    setTheme(cur === 'dark' ? 'light' : 'dark');
+  });
+
   // ── Filter + Search ─────────────────────────────────────
   const fBtns = document.querySelectorAll('.fb');
   const cards = document.querySelectorAll('.card');
@@ -732,14 +744,12 @@
   }, { threshold: 0.07 });
 
   cards.forEach((c, i) => {
-    c.style.transitionDelay = `${i * 60}ms`;
+    c.style.transitionDelay = `${i * 55}ms`;
     io.observe(c);
   });
-
-  // Remove stagger delay after initial animation so filter is instant
   setTimeout(() => {
     cards.forEach(c => { c.style.transitionDelay = '0ms'; });
-  }, cards.length * 60 + 700);
+  }, cards.length * 55 + 700);
 </script>
 
 </body>
