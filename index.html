@@ -322,6 +322,25 @@
     .ct { background: var(--grad-pink); }
     .ca { background: var(--grad-sun); }
 
+    .c-meta {
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+      font-size: 11.5px; color: var(--ink-3); font-weight: 600;
+      min-height: 18px;
+    }
+    .c-meta .live-dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 8px #22c55e; animation: live 2.2s ease-in-out infinite; flex-shrink: 0; display: inline-block; }
+    .c-meta .dot-stale { background: #94a3b8; box-shadow: 0 0 8px rgba(148,163,184,.5); }
+    .c-meta .dot-cold { background: #cbd5e1; box-shadow: none; animation: none; }
+    .c-meta a { color: var(--ink-3); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: color .15s; }
+    .c-meta a:hover { color: var(--ink); }
+    .c-meta .pulse { display: inline-flex; align-items: center; gap: 6px; }
+    .c-meta .loading-bar {
+      width: 60px; height: 8px; border-radius: 4px;
+      background: linear-gradient(90deg, var(--bg-soft) 0%, var(--chip) 50%, var(--bg-soft) 100%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s linear infinite;
+    }
+    @keyframes shimmer { 0%{background-position: 200% 0} 100%{background-position: -200% 0} }
+
     .c-links { display: flex; gap: 8px; margin-top: 4px; }
     .lnk {
       flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
@@ -452,6 +471,7 @@
       <button class="fb" data-f="web">Web Apps</button>
       <button class="fb" data-f="education">Education</button>
       <button class="fb" data-f="lifestyle">Lifestyle</button>
+      <button class="fb" id="sortRecent" title="Sort by most recently updated">🕒 Recent</button>
       <div class="nsearch-wrap">
         <input id="nsearch" class="nsearch" type="text" placeholder="Search projects…" autocomplete="off" />
         <button id="nsearch-clear" class="nsearch-clear" title="Clear search">×</button>
@@ -463,7 +483,7 @@
   <div class="grid" id="grid">
 
     <!-- ResearchFlow -->
-    <div class="card g-cool" data-cats="ai research">
+    <div class="card g-cool" data-cats="ai research" data-repo="syahmedu/researchflow">
       <div class="c-top"><span class="c-ico">🔬</span><span class="c-num">#08</span></div>
       <div class="c-title">ResearchFlow</div>
       <div class="c-desc">AI-powered 10-stage wizard that walks researchers from raw idea to publication-ready methodology — question, theory, hypotheses, design, and full analysis plan.</div>
@@ -472,13 +492,14 @@
         <span class="cat ct">Research</span>
         <span class="tag">React</span><span class="tag">TypeScript</span><span class="tag">Gemini AI</span>
       </div>
+      <div class="c-meta" data-meta></div>
       <div class="c-links">
         <a class="lnk lp" href="https://researchflow-alpha.vercel.app" target="_blank" rel="noopener">Open ↗</a>
       </div>
     </div>
 
     <!-- KarmaMap -->
-    <div class="card g-cool" data-cats="ai">
+    <div class="card g-cool" data-cats="ai" data-repo="syahmedu/karmamap">
       <div class="c-top"><span class="c-ico">🗺️</span><span class="c-num">#03</span></div>
       <div class="c-title">KarmaMap</div>
       <div class="c-desc">Interactive D3 treemap visualising AI's impact on Indian job roles. Claude AI scores each role by growth rate, salary, exposure level, and future outlook.</div>
@@ -486,13 +507,14 @@
         <span class="cat cp">AI Tool</span>
         <span class="tag">React</span><span class="tag">D3.js</span><span class="tag">Claude AI</span>
       </div>
+      <div class="c-meta" data-meta></div>
       <div class="c-links">
         <a class="lnk lp" href="https://karmamap-git-master-syahmedus-projects.vercel.app" target="_blank" rel="noopener">Open ↗</a>
       </div>
     </div>
 
     <!-- WordMap -->
-    <div class="card g-pink" data-cats="ai research">
+    <div class="card g-pink" data-cats="ai research" data-repo="syahmedu/wordmap">
       <div class="c-top"><span class="c-ico">🌐</span><span class="c-num">#04</span></div>
       <div class="c-title">WordMap</div>
       <div class="c-desc">Research intelligence treemap for 106 social-science terms. Opportunity Scores, live OpenAlex paper &amp; author data, AI Brief, and a White Space Finder.</div>
@@ -501,13 +523,14 @@
         <span class="cat cp">AI Tool</span>
         <span class="tag">D3.js</span><span class="tag">OpenAlex</span><span class="tag">Claude AI</span>
       </div>
+      <div class="c-meta" data-meta></div>
       <div class="c-links">
         <a class="lnk lp" href="https://syahmedu.github.io/wordmap/" target="_blank" rel="noopener">Open ↗</a>
       </div>
     </div>
 
     <!-- TaskFlow -->
-    <div class="card g-mint" data-cats="web">
+    <div class="card g-mint" data-cats="web" data-repo="syahmedu/task-manager">
       <div class="c-top"><span class="c-ico">✅</span><span class="c-num">#01</span></div>
       <div class="c-title">TaskFlow</div>
       <div class="c-desc">Full-stack team task manager with JWT auth, role-based access for managers and mentors, and multi-assignee task workflows. Deployed on Vercel with Upstash Redis storage.</div>
@@ -515,13 +538,14 @@
         <span class="cat cb">Web App</span>
         <span class="tag">React</span><span class="tag">Express</span><span class="tag">JWT</span>
       </div>
+      <div class="c-meta" data-meta></div>
       <div class="c-links">
         <a class="lnk lp" href="https://task-manager-tau-three-25.vercel.app" target="_blank" rel="noopener">Open ↗</a>
       </div>
     </div>
 
     <!-- JournalTime -->
-    <div class="card g-pink" data-cats="research">
+    <div class="card g-pink" data-cats="research" data-repo="syahmedu/journaltime">
       <div class="c-top"><span class="c-ico">📰</span><span class="c-num">#05</span></div>
       <div class="c-title">JournalTime</div>
       <div class="c-desc">Research writing workspace for social-science academics. Research Compass (AI gap finder), Article Developer, and 2,000+ Scopus journals with real wait times.</div>
@@ -530,13 +554,14 @@
         <span class="cat cp">AI Tool</span>
         <span class="tag">D3.js</span><span class="tag">Claude</span><span class="tag">Groq</span>
       </div>
+      <div class="c-meta" data-meta></div>
       <div class="c-links">
         <a class="lnk lp" href="https://syahmedu.github.io/journaltime" target="_blank" rel="noopener">Open ↗</a>
       </div>
     </div>
 
     <!-- ScaleScope -->
-    <div class="card g-pink" data-cats="ai research">
+    <div class="card g-pink" data-cats="ai research" data-repo="syahmedu/scalebase">
       <div class="c-top"><span class="c-ico">📐</span><span class="c-num">#09</span></div>
       <div class="c-title">ScaleScope</div>
       <div class="c-desc">Library of 89 validated measurement scales across 5 social-science domains — browse, get AI recommendations, and compare scales with APA 7th citations.</div>
@@ -544,13 +569,14 @@
         <span class="cat ct">Research</span>
         <span class="tag">Groq</span><span class="tag">React</span><span class="tag">TypeScript</span>
       </div>
+      <div class="c-meta" data-meta></div>
       <div class="c-links">
         <a class="lnk lp" href="https://scalescope.vercel.app" target="_blank" rel="noopener">Open ↗</a>
       </div>
     </div>
 
     <!-- Career Compass -->
-    <div class="card g-sun" data-cats="education research">
+    <div class="card g-sun" data-cats="education research" data-repo="syahmedu/career-compass">
       <div class="c-top"><span class="c-ico">🧭</span><span class="c-num">#12</span></div>
       <div class="c-title">Career Compass</div>
       <div class="c-desc">Evidence-based 8-stage career counselling instrument for Class 10 students. 115+ items covering RIASEC, Big Five, aptitudes, and values — ends in a personalised stream report.</div>
@@ -559,13 +585,14 @@
         <span class="cat ct">Research</span>
         <span class="tag">Express</span><span class="tag">html2pdf</span>
       </div>
+      <div class="c-meta" data-meta></div>
       <div class="c-links">
         <a class="lnk lp" href="https://career-compass-production-df45.up.railway.app" target="_blank" rel="noopener">Open ↗</a>
       </div>
     </div>
 
     <!-- IdeaBox -->
-    <div class="card g-mint" data-cats="web">
+    <div class="card g-mint" data-cats="web" data-repo="syahmedu/ideabox">
       <div class="c-top"><span class="c-ico">💡</span><span class="c-num">#11</span></div>
       <div class="c-title">IdeaBox</div>
       <div class="c-desc">Mobile-first idea capture app for thoughts on the go. Text and voice input, category tagging, full-text search, and server-side persistence across devices.</div>
@@ -573,13 +600,14 @@
         <span class="cat cb">Web</span>
         <span class="tag">Express</span><span class="tag">Vanilla JS</span><span class="tag">Vercel</span>
       </div>
+      <div class="c-meta" data-meta></div>
       <div class="c-links">
         <a class="lnk lp" href="https://ideabox-six.vercel.app" target="_blank" rel="noopener">Open ↗</a>
       </div>
     </div>
 
     <!-- Cadence -->
-    <div class="card g-pink" data-cats="research">
+    <div class="card g-pink" data-cats="research" data-repo="syahmedu/cadence">
       <div class="c-top"><span class="c-ico">🎵</span><span class="c-num">#10</span></div>
       <div class="c-title">Cadence</div>
       <div class="c-desc">Immersive survey tool for longitudinal research. One-question-at-a-time flow, milestone celebrations, keyboard shortcuts, and temporal wave tracking with participant codes.</div>
@@ -587,13 +615,14 @@
         <span class="cat ct">Research</span>
         <span class="tag">Vanilla JS</span><span class="tag">SheetJS</span><span class="tag">Single File</span>
       </div>
+      <div class="c-meta" data-meta></div>
       <div class="c-links">
         <a class="lnk lp" href="https://syahmedu.github.io/cadence/" target="_blank" rel="noopener">Open ↗</a>
       </div>
     </div>
 
     <!-- Timetable Generator -->
-    <div class="card g-sun" data-cats="education">
+    <div class="card g-sun" data-cats="education" data-repo="syahmedu/timetable-generator">
       <div class="c-top"><span class="c-ico">📅</span><span class="c-num">#07</span></div>
       <div class="c-title">Timetable Generator</div>
       <div class="c-desc">Constraint-based academic timetable generator for 11 classes across 3 departments. Respects mentor availability, subject caps, and AY 2026–27 scheduling rules.</div>
@@ -601,13 +630,14 @@
         <span class="cat ca">Education</span>
         <span class="tag">Next.js</span><span class="tag">TypeScript</span><span class="tag">React 19</span>
       </div>
+      <div class="c-meta" data-meta></div>
       <div class="c-links">
         <a class="lnk lp" href="https://syahmedu.github.io/timetable-generator/" target="_blank" rel="noopener">Open ↗</a>
       </div>
     </div>
 
     <!-- Bachelor Meal Plan -->
-    <div class="card g-warm" data-cats="lifestyle">
+    <div class="card g-warm" data-cats="lifestyle" data-repo="syahmedu/bachelor-meal-plan">
       <div class="c-top"><span class="c-ico">🍳</span><span class="c-num">#06</span></div>
       <div class="c-title">Bachelor Meal Plan</div>
       <div class="c-desc">36 halal recipes with weekly meal planning, shopping list generation, and portion guidance. Mobile-first and fully offline via localStorage — no sign-up needed.</div>
@@ -615,13 +645,14 @@
         <span class="cat ca">Lifestyle</span>
         <span class="tag">Vanilla JS</span><span class="tag">localStorage</span>
       </div>
+      <div class="c-meta" data-meta></div>
       <div class="c-links">
         <a class="lnk lp" href="https://syahmedu.github.io/bachelor-meal-plan/" target="_blank" rel="noopener">Open ↗</a>
       </div>
     </div>
 
     <!-- Nexus (self) -->
-    <div class="card g-warm" data-cats="web">
+    <div class="card g-warm" data-cats="web" data-repo="syahmedu/nexus">
       <div class="c-top"><span class="c-ico">🧬</span><span class="c-num">#02</span></div>
       <div class="c-title">Nexus</div>
       <div class="c-desc">The portfolio you're looking at right now. Single-file HTML with light/dark theming, filterable project grid, and search — a living index of everything built.</div>
@@ -629,6 +660,7 @@
         <span class="cat cb">Web</span>
         <span class="tag">Single File</span><span class="tag">Vanilla JS</span>
       </div>
+      <div class="c-meta" data-meta></div>
       <div class="c-links">
         <a class="lnk lp" href="https://syahmedu.github.io/nexus/" target="_blank" rel="noopener">Open ↗</a>
       </div>
@@ -719,6 +751,133 @@
     applyFilters();
     nsearch.focus();
   });
+
+  // ── Live GitHub status (last commit + relative time) ────
+  const GH_OWNER_DEFAULT = 'syahmedu';
+  const CACHE_KEY = 'nexus_gh_cache_v1';
+  const CACHE_TTL = 60 * 60 * 1000; // 1 hour
+
+  function loadCache() {
+    try {
+      const raw = localStorage.getItem(CACHE_KEY);
+      if (!raw) return {};
+      const parsed = JSON.parse(raw);
+      if (Date.now() - parsed.t > CACHE_TTL) return {};
+      return parsed.d || {};
+    } catch { return {}; }
+  }
+  function saveCache(d) {
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), d })); } catch {}
+  }
+
+  function relativeTime(iso) {
+    const diff = Date.now() - new Date(iso).getTime();
+    const s = Math.floor(diff / 1000);
+    if (s < 60)        return 'just now';
+    const m = Math.floor(s / 60);
+    if (m < 60)        return `${m}m ago`;
+    const h = Math.floor(m / 60);
+    if (h < 24)        return `${h}h ago`;
+    const d = Math.floor(h / 24);
+    if (d < 7)         return `${d}d ago`;
+    if (d < 30)        return `${Math.floor(d / 7)}w ago`;
+    if (d < 365)       return `${Math.floor(d / 30)}mo ago`;
+    return `${Math.floor(d / 365)}y ago`;
+  }
+
+  function dotClass(iso) {
+    const days = (Date.now() - new Date(iso).getTime()) / 86400000;
+    if (days <= 14)    return '';            // live (green)
+    if (days <= 60)    return 'dot-stale';   // gray with glow
+    return 'dot-cold';                       // cold gray
+  }
+
+  function renderMeta(card, repo, data) {
+    const meta = card.querySelector('[data-meta]');
+    if (!meta) return;
+    if (!data) {
+      meta.innerHTML = `<a href="https://github.com/${repo}" target="_blank" rel="noopener" class="pulse">⎇ ${repo.split('/')[1]}</a>`;
+      return;
+    }
+    const iso = data.pushed_at;
+    meta.innerHTML = `
+      <a href="https://github.com/${repo}" target="_blank" rel="noopener">
+        <span class="live-dot ${dotClass(iso)}"></span>Updated ${relativeTime(iso)}
+      </a>
+      <a href="https://github.com/${repo}" target="_blank" rel="noopener" title="GitHub stars">★ ${data.stargazers_count ?? 0}</a>`;
+    card.dataset.pushed = iso;
+  }
+
+  async function fetchRepo(repo) {
+    const res = await fetch(`https://api.github.com/repos/${repo}`, {
+      headers: { 'Accept': 'application/vnd.github+json' }
+    });
+    if (!res.ok) throw new Error(res.status);
+    return res.json();
+  }
+
+  async function loadGitHubStatus() {
+    const repoCards = Array.from(document.querySelectorAll('.card[data-repo]'));
+    const cache = loadCache();
+    const fresh = {};
+
+    // paint cached first
+    repoCards.forEach(card => {
+      const repo = card.dataset.repo;
+      const cached = cache[repo];
+      if (cached) renderMeta(card, repo, cached);
+      else {
+        const meta = card.querySelector('[data-meta]');
+        if (meta) meta.innerHTML = `<span class="loading-bar"></span>`;
+      }
+    });
+
+    // fetch what we don't have
+    const toFetch = repoCards.filter(c => !cache[c.dataset.repo]);
+    await Promise.all(toFetch.map(async card => {
+      const repo = card.dataset.repo;
+      try {
+        const data = await fetchRepo(repo);
+        const slim = {
+          pushed_at: data.pushed_at,
+          stargazers_count: data.stargazers_count,
+          html_url: data.html_url,
+        };
+        fresh[repo] = slim;
+        renderMeta(card, repo, slim);
+      } catch (e) {
+        renderMeta(card, repo, null);
+      }
+    }));
+
+    if (Object.keys(fresh).length) {
+      saveCache({ ...cache, ...fresh });
+    }
+  }
+
+  loadGitHubStatus();
+
+  // ── Sort by recent (toggle) ─────────────────────────────
+  const sortBtn = document.getElementById('sortRecent');
+  let sortByRecent = false;
+  sortBtn?.addEventListener('click', () => {
+    sortByRecent = !sortByRecent;
+    sortBtn.classList.toggle('active', sortByRecent);
+    const grid = document.getElementById('grid');
+    const items = Array.from(grid.querySelectorAll('.card'));
+    if (sortByRecent) {
+      items.sort((a, b) => {
+        const ta = a.dataset.pushed ? new Date(a.dataset.pushed).getTime() : 0;
+        const tb = b.dataset.pushed ? new Date(b.dataset.pushed).getTime() : 0;
+        return tb - ta;
+      });
+    } else {
+      items.sort((a, b) => Number(a.dataset.origIndex) - Number(b.dataset.origIndex));
+    }
+    items.forEach(el => grid.appendChild(el));
+  });
+  // remember original order for restore
+  document.querySelectorAll('#grid .card').forEach((c, i) => c.dataset.origIndex = i);
 
   // ── Scroll-in animation ─────────────────────────────────
   const io = new IntersectionObserver(entries => {
