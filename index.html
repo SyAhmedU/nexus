@@ -498,6 +498,23 @@
   <!-- Grid -->
   <div class="grid" id="grid">
 
+    <!-- EffectScope -->
+    <div class="card g-warm" data-cats="ai research web" data-repo="syahmedu/effectscope">
+      <div class="c-top"><span class="c-ico">🔬</span><span class="c-num">#16</span></div>
+      <div class="c-title">EffectScope</div>
+      <div class="c-desc"><strong>Research papers as glanceable cards.</strong> The "read a paper without reading it" tool — drop in an abstract, the AI extracts constructs, effects, methodology, hypotheses, and caveats, then renders one card with three side-by-side visualizations: a directed <strong>construct graph</strong> (IV → mediator → DV, edges coloured + width-scaled by effect size, dashed when non-significant), a <strong>forest plot</strong> of every reported effect projected onto a single approximate-r axis with Cohen tick marks at .1 / .3 / .5 (the right column always keeps the original metric — r, β, d, η², OR), and a <strong>methodology pill row</strong> (N, design, population, country, year, measure). <strong>Stack 2-5 papers in Compare</strong> and a banner above the columns flags constructs that appear in ≥2 papers — that's where comparison gets interesting (do they agree on the sign? do the magnitudes match?). Three demo meta-analyses ship on first load (Bakker 2008, Halbesleben 2010, Christian 2011) so the compare view is non-empty out of the box. Groq <code>llama-3.3-70b-versatile</code> with strict JSON schema; <strong>deterministic regex fallback</strong> with a small construct vocabulary so it works without an API key (badged "Heuristic — verify" on the card). Sibling of TheoryScope (theories), ScaleScope (measures), ToolsScope (analyses) — fills the missing "individual paper" niche in the Research Suite.</div>
+      <div class="c-tags">
+        <span class="cat cp">AI Tool</span>
+        <span class="cat ct">Research</span>
+        <span class="cat cw">Web</span>
+        <span class="tag">React 19</span><span class="tag">TypeScript</span><span class="tag">SVG viz</span><span class="tag">Forest plot</span><span class="tag">Cohen benchmarks</span><span class="tag">Groq AI</span><span class="tag">Offline fallback</span>
+      </div>
+      <div class="c-meta" data-meta></div>
+      <div class="c-links">
+        <a class="lnk lp" href="https://effectscope.vercel.app" target="_blank" rel="noopener">Open ↗</a>
+      </div>
+    </div>
+
     <!-- ToolsScope -->
     <div class="card g-warm" data-cats="ai research web" data-repo="syahmedu/toolsscope">
       <div class="c-top"><span class="c-ico">📊</span><span class="c-num">#15</span></div>
