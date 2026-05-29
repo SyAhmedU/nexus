@@ -2,7 +2,7 @@
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Nexus — Syed Asrar</title>
   <meta name="description" content="AI tools, research technology, and web applications by Syed Asrar — 12 shipped projects spanning research methodology, productivity, and education.">
   <meta name="theme-color" content="#FBF7EF">
@@ -458,6 +458,10 @@
 
     /* Soften the existing blobs toward the liquid-drift feel */
     .blob { filter: blur(104px); }
+    /* When the living WebGL aurora mounts, retire the static blobs to it */
+    .aurora-on .blob { opacity: 0 !important; transition: opacity 1.4s ease; }
+    .aurora-on .dots { opacity: .5; transition: opacity 1.4s ease; }
+    canvas.sx-aurora { transition: opacity 1.4s ease; }
 
     /* Display serif on the headings */
     .hero-h { font-family: var(--font-display); font-weight: 600; letter-spacing: -.035em; }
@@ -484,6 +488,52 @@
     @media (prefers-reduced-motion: reduce) {
       .hero-h .grad, .hero-h .grad-cool { animation: none !important; }
       .cursor-glow { transition: none !important; }
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       MOBILE-NATIVE — feels built for the phone when opened on one.
+       ═══════════════════════════════════════════════════════════════ */
+    :root { --safe-t: env(safe-area-inset-top, 0px); --safe-b: env(safe-area-inset-bottom, 0px); }
+    html, body { overflow-x: clip; }
+    * { -webkit-tap-highlight-color: transparent; }
+    /* Brand bar clears the notch */
+    .syed-bar { padding-top: var(--safe-t); height: calc(52px + var(--safe-t)); }
+
+    /* On touch: no sticky hover lifts, no pointer glow */
+    @media (hover: none) {
+      .card:hover { transform: none !important; box-shadow: var(--shadow); border-color: var(--border); }
+      .fb:hover, .lnk:hover, .a-card:hover { transform: none; }
+      .cursor-glow { display: none; }
+    }
+
+    @media (max-width: 640px) {
+      .wrap { padding: 0 16px; }
+      .hero { padding: 38px 0 30px; }
+      .hero-h { font-size: clamp(38px, 12.5vw, 58px); margin-bottom: 18px; }
+      .hero-p { font-size: 15px; line-height: 1.6; margin-bottom: 26px; }
+      .stats { gap: 10px; }
+      .stat { flex: 1 1 42%; padding: 13px 16px; }
+      .stat-n { font-size: 24px; }
+
+      .filter { padding: 26px 0 16px; }
+      .filter-bar { flex-wrap: wrap; gap: 8px; }
+      /* search gets its own full-width row at the top — never buried */
+      .nsearch-wrap { order: -1; flex-basis: 100%; margin: 0 0 4px; }
+      .nsearch, .nsearch:focus { width: 100%; box-shadow: none; }
+      .fb { min-height: 42px; padding: 9px 16px; }
+
+      .grid { gap: 14px; padding-bottom: 56px; }
+      .card { padding: 18px; border-radius: var(--r); }
+      .c-ico { width: 46px; height: 46px; font-size: 22px; }
+      .c-title { font-size: 19px; }
+      .lnk { padding: 13px 14px; min-height: 46px; }
+
+      .artifacts-section { padding-bottom: 64px; }
+      .a-card { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .a-actions { width: 100%; }
+      .a-actions .lnk { width: 100%; min-height: 46px; }
+
+      footer { padding: 24px 16px calc(24px + var(--safe-b)); }
     }
   </style>
 </head>
@@ -1061,6 +1111,77 @@
       root.style.setProperty('--cy', e.clientY);
     }, { passive: true });
   }
+</script>
+
+<!-- ══ SYED AURORA — living WebGL ambient engine (identity v2) ══ -->
+<script>
+(function () {
+  'use strict';
+  var VERT = 'attribute vec2 a_pos;void main(){gl_Position=vec4(a_pos,0.0,1.0);}';
+  var FRAG = [
+    'precision highp float;',
+    'uniform vec2 u_res;uniform float u_time;uniform vec2 u_mouse;uniform float u_intensity;',
+    'uniform vec3 u_c1;uniform vec3 u_c2;uniform vec3 u_c3;uniform vec3 u_bg;',
+    'float hash(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}',
+    'float noise(vec2 p){vec2 i=floor(p),f=fract(p);float a=hash(i),b=hash(i+vec2(1.,0.)),c=hash(i+vec2(0.,1.)),d=hash(i+vec2(1.,1.));vec2 u=f*f*(3.-2.*f);return mix(mix(a,b,u.x),mix(c,d,u.x),u.y);}',
+    'float fbm(vec2 p){float v=0.,a=0.5;for(int i=0;i<5;i++){v+=a*noise(p);p=p*2.0+vec2(1.7,9.2);a*=0.5;}return v;}',
+    'void main(){',
+    '  vec2 uv=gl_FragCoord.xy/u_res.xy;vec2 p=uv;p.x*=u_res.x/u_res.y;p*=2.2;',
+    '  float t=u_time*0.045;',
+    '  vec2 q=vec2(fbm(p+vec2(0.0,t)),fbm(p+vec2(5.2,1.3)-t*0.8));',
+    '  vec2 r=vec2(fbm(p+3.5*q+vec2(1.7,9.2)+0.15*t),fbm(p+3.5*q+vec2(8.3,2.8)-0.12*t));',
+    '  float f=fbm(p+3.5*r);',
+    '  float md=distance(uv,u_mouse);float m=smoothstep(0.55,0.0,md);f=clamp(f+m*0.30,0.0,1.0);',
+    '  vec3 col=mix(u_c3,u_c2,smoothstep(0.18,0.62,f));col=mix(col,u_c1,smoothstep(0.55,0.96,f));',
+    '  col+=0.06*vec3(r.x-r.y);',
+    '  float amt=(0.10+0.20*f+0.22*m)*u_intensity;col=mix(u_bg,col,clamp(amt,0.0,1.0));',
+    '  gl_FragColor=vec4(col,1.0);}'
+  ].join('\n');
+  function hexToRGB(h){h=(h||'').replace('#','');if(h.length===3)h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];var n=parseInt(h,16);return [((n>>16)&255)/255,((n>>8)&255)/255,(n&255)/255];}
+  function compile(gl,t,src){var s=gl.createShader(t);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){console.warn('[aurora]',gl.getShaderInfoLog(s));return null;}return s;}
+  window.SyedAurora={_raf:null,mount:function(opts){
+    opts=opts||{};
+    if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return false;
+    var canvas=document.createElement('canvas');canvas.className='sx-aurora';
+    var st=canvas.style;st.position='fixed';st.inset='0';st.width='100%';st.height='100%';
+    st.zIndex='0';st.pointerEvents='none';st.opacity='0';
+    document.body.insertBefore(canvas,document.body.firstChild);
+    var gl=null;try{gl=canvas.getContext('webgl',{antialias:false,alpha:false,depth:false})||canvas.getContext('experimental-webgl');}catch(e){}
+    if(!gl){canvas.remove();return false;}
+    var vs=compile(gl,gl.VERTEX_SHADER,VERT),fs=compile(gl,gl.FRAGMENT_SHADER,FRAG);
+    if(!vs||!fs){canvas.remove();return false;}
+    var prog=gl.createProgram();gl.attachShader(prog,vs);gl.attachShader(prog,fs);gl.linkProgram(prog);
+    if(!gl.getProgramParameter(prog,gl.LINK_STATUS)){canvas.remove();return false;}
+    gl.useProgram(prog);
+    var buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+    var aPos=gl.getAttribLocation(prog,'a_pos');gl.enableVertexAttribArray(aPos);gl.vertexAttribPointer(aPos,2,gl.FLOAT,false,0,0);
+    var U={res:gl.getUniformLocation(prog,'u_res'),time:gl.getUniformLocation(prog,'u_time'),mouse:gl.getUniformLocation(prog,'u_mouse'),intensity:gl.getUniformLocation(prog,'u_intensity'),c1:gl.getUniformLocation(prog,'u_c1'),c2:gl.getUniformLocation(prog,'u_c2'),c3:gl.getUniformLocation(prog,'u_c3'),bg:gl.getUniformLocation(prog,'u_bg')};
+    var coarse=(window.matchMedia&&matchMedia('(pointer:coarse)').matches)||Math.min(window.innerWidth,window.innerHeight)<700;
+    var scale=opts.scale!=null?opts.scale:(coarse?0.4:0.6),intensity=opts.intensity!=null?opts.intensity:0.82;
+    function resize(){var w=Math.max(1,Math.floor(window.innerWidth*scale)),h=Math.max(1,Math.floor(window.innerHeight*scale));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h);}}
+    window.addEventListener('resize',resize,{passive:true});resize();
+    var mx=0.5,my=0.5,tx=0.5,ty=0.5;
+    window.addEventListener('mousemove',function(e){tx=e.clientX/window.innerWidth;ty=1.0-e.clientY/window.innerHeight;},{passive:true});
+    var start=performance.now(),self=this;
+    function palette(){var dark=document.documentElement.getAttribute('data-theme')==='dark';return {c1:hexToRGB('FF9656'),c2:hexToRGB('F14575'),c3:hexToRGB('9270F4'),bg:dark?hexToRGB('14111C'):hexToRGB('FBF7EF'),intensity:dark?intensity*1.15:intensity};}
+    function frame(now){
+      mx+=(tx-mx)*0.05;my+=(ty-my)*0.05;var pal=palette();
+      gl.uniform2f(U.res,canvas.width,canvas.height);gl.uniform1f(U.time,(now-start)/1000);
+      gl.uniform2f(U.mouse,mx,my);gl.uniform1f(U.intensity,pal.intensity);
+      gl.uniform3fv(U.c1,pal.c1);gl.uniform3fv(U.c2,pal.c2);gl.uniform3fv(U.c3,pal.c3);gl.uniform3fv(U.bg,pal.bg);
+      gl.drawArrays(gl.TRIANGLE_STRIP,0,4);self._raf=requestAnimationFrame(frame);
+    }
+    self._raf=requestAnimationFrame(frame);
+    requestAnimationFrame(function(){canvas.style.transition='opacity 1.4s ease';canvas.style.opacity='1';});
+    document.addEventListener('visibilitychange',function(){if(document.hidden){if(self._raf){cancelAnimationFrame(self._raf);self._raf=null;}}else if(!self._raf){self._raf=requestAnimationFrame(frame);}});
+    return true;
+  },stop:function(){if(this._raf)cancelAnimationFrame(this._raf);this._raf=null;}};
+  // Mount: if the living aurora takes, retire the static blobs to it.
+  if (window.SyedAurora.mount({ intensity: 0.82, scale: 0.6 })) {
+    document.body.classList.add('aurora-on');
+  }
+})();
 </script>
 
 </body>
