@@ -370,6 +370,8 @@
     .lp:hover { transform: translateY(-1px); box-shadow: 0 10px 22px -8px var(--ink); }
     .lg { background: transparent; color: var(--ink); border: 1px solid var(--border-strong); }
     .lg:hover { background: var(--bg-soft); }
+    /* The hub's own card — non-interactive; you're already viewing it. */
+    .lnk-current { background: transparent; color: var(--ink-3); border: 1px dashed var(--border-strong); cursor: default; pointer-events: none; }
 
     /* per-card gradient palette assignments */
     .g-warm { --card-grad: var(--grad-warm); }
@@ -729,7 +731,7 @@
       </div>
       <div class="c-meta" data-meta></div>
       <div class="c-links">
-        <a class="lnk lp" href="https://karmamap-git-master-syahmedus-projects.vercel.app" target="_blank" rel="noopener">Open ↗</a>
+        <a class="lnk lp" href="https://karmamap.vercel.app" target="_blank" rel="noopener">Open ↗</a>
       </div>
     </div>
 
@@ -776,7 +778,7 @@
       </div>
       <div class="c-meta" data-meta></div>
       <div class="c-links">
-        <a class="lnk lp" href="https://syahmedu.github.io/journaltime" target="_blank" rel="noopener">Open ↗</a>
+        <a class="lnk lp" href="https://syahmedu.github.io/journaltime/" target="_blank" rel="noopener">Open ↗</a>
       </div>
     </div>
 
@@ -883,7 +885,7 @@
       </div>
       <div class="c-meta" data-meta></div>
       <div class="c-links">
-        <a class="lnk lp" href="https://syahmedu.github.io/nexus/" target="_blank" rel="noopener">Open ↗</a>
+        <span class="lnk lp lnk-current" aria-disabled="true" title="You're already here">Current view</span>
       </div>
     </div>
 
