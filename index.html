@@ -4,13 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Nexus — Syed Asrar</title>
-  <meta name="description" content="AI tools, research technology, and web applications by Syed Asrar — 17 shipped projects spanning research methodology, productivity, and education.">
+  <meta name="description" content="AI tools, research technology, and web applications by Syed Asrar — 18 shipped projects spanning research methodology, productivity, and education.">
   <meta name="theme-color" content="#FBF7EF">
   <link rel="canonical" href="https://syahmedu.github.io/nexus/">
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="Nexus — Syed Asrar">
-  <meta property="og:description" content="AI tools, research technology, and web applications by Syed Asrar — 17 shipped projects spanning research methodology, productivity, and education.">
+  <meta property="og:description" content="AI tools, research technology, and web applications by Syed Asrar — 18 shipped projects spanning research methodology, productivity, and education.">
   <meta property="og:url" content="https://syahmedu.github.io/nexus/">
   <meta property="og:image" content="https://syahmedu.github.io/nexus/og.svg">
   <meta property="og:image:width" content="1200">
@@ -19,9 +19,9 @@
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Nexus — Syed Asrar">
-  <meta name="twitter:description" content="AI tools, research technology, and web applications — 12 shipped projects.">
+  <meta name="twitter:description" content="AI tools, research technology, and web applications — 18 shipped projects.">
   <meta name="twitter:image" content="https://syahmedu.github.io/nexus/og.svg">
-  <meta name="twitter:image:alt" content="Nexus — the portfolio of Syed Asrar: 17 shipped AI, research, and web projects.">
+  <meta name="twitter:image:alt" content="Nexus — the portfolio of Syed Asrar: 18 shipped AI, research, and web projects.">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="author" content="Syed Ahmed">
   <script type="application/ld+json">
@@ -35,7 +35,7 @@
       "@type": "Person",
       "name": "Syed Asrar",
       "url": "https://syahmedu.github.io/nexus/",
-      "description": "Builder of AI tools, research technology, and web applications — 17 shipped projects across research methodology, productivity, and education.",
+      "description": "Builder of AI tools, research technology, and web applications — 18 shipped projects across research methodology, productivity, and education.",
       "knowsAbout": ["research methodology", "AI applications", "social science", "web development"]
     }
   }
@@ -978,16 +978,17 @@
   // ── Live GitHub status (last commit + relative time) ────
   const GH_OWNER_DEFAULT = 'syahmedu';
   const CACHE_KEY = 'nexus_gh_cache_v1';
-  const CACHE_TTL = 60 * 60 * 1000; // 1 hour
+  const CACHE_TTL = 6 * 60 * 60 * 1000; // 6 hours — push dates change slowly; conserve the anonymous 60-req/hr GitHub budget
 
+  // Returns last-known data plus whether it's still fresh. Stale data is still
+  // returned (for stale-while-revalidate), so the page never blanks the dates.
   function loadCache() {
     try {
       const raw = localStorage.getItem(CACHE_KEY);
-      if (!raw) return {};
+      if (!raw) return { data: {}, fresh: false };
       const parsed = JSON.parse(raw);
-      if (Date.now() - parsed.t > CACHE_TTL) return {};
-      return parsed.d || {};
-    } catch { return {}; }
+      return { data: parsed.d || {}, fresh: (Date.now() - parsed.t) < CACHE_TTL };
+    } catch { return { data: {}, fresh: false }; }
   }
   function saveCache(d) {
     try { localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), d })); } catch {}
@@ -1041,23 +1042,25 @@
 
   async function loadGitHubStatus() {
     const repoCards = Array.from(document.querySelectorAll('.card[data-repo]'));
-    const cache = loadCache();
-    const fresh = {};
+    const { data: cache, fresh } = loadCache();
+    const updated = {};
 
-    // paint cached first
+    // Paint last-known data immediately (even if stale); loading bar if we've
+    // never seen this repo.
     repoCards.forEach(card => {
       const repo = card.dataset.repo;
-      const cached = cache[repo];
-      if (cached) renderMeta(card, repo, cached);
+      if (cache[repo]) renderMeta(card, repo, cache[repo]);
       else {
         const meta = card.querySelector('[data-meta]');
         if (meta) meta.innerHTML = `<span class="loading-bar"></span>`;
       }
     });
 
-    // fetch what we don't have
-    const toFetch = repoCards.filter(c => !cache[c.dataset.repo]);
-    await Promise.all(toFetch.map(async card => {
+    // Cache still fresh → don't touch the network at all (saves the 60/hr budget).
+    if (fresh) return;
+
+    // Stale or missing → revalidate, keeping cached values visible meanwhile.
+    await Promise.all(repoCards.map(async card => {
       const repo = card.dataset.repo;
       try {
         const data = await fetchRepo(repo);
@@ -1066,15 +1069,17 @@
           stargazers_count: data.stargazers_count,
           html_url: data.html_url,
         };
-        fresh[repo] = slim;
+        updated[repo] = slim;
         renderMeta(card, repo, slim);
       } catch (e) {
-        renderMeta(card, repo, null);
+        // Rate-limited (403) or offline: keep the last-known data on screen;
+        // only fall back to a bare link when we have nothing cached for it.
+        if (!cache[repo]) renderMeta(card, repo, null);
       }
     }));
 
-    if (Object.keys(fresh).length) {
-      saveCache({ ...cache, ...fresh });
+    if (Object.keys(updated).length) {
+      saveCache({ ...cache, ...updated });
     }
   }
 
