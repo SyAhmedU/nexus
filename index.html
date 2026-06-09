@@ -266,6 +266,46 @@
       border-color: var(--ink);
       box-shadow: 0 6px 18px -6px var(--ink);
     }
+    .fb-count { display: inline-block; margin-left: 7px; font-size: 11px; font-weight: 700; opacity: .55; font-family: var(--font-mono); }
+    .fb.active .fb-count { opacity: .85; }
+
+    /* ── Search ────────────────────────────────────────────── */
+    .search-wrap { position: relative; display: flex; align-items: center; margin-left: auto; flex: 1 1 200px; max-width: 300px; min-width: 160px; }
+    .search-ico { position: absolute; left: 14px; font-size: 14px; color: var(--ink-3); pointer-events: none; line-height: 1; }
+    .search-input {
+      width: 100%; padding: 10px 40px 10px 36px; border-radius: 999px;
+      border: 1px solid var(--border); background: var(--card); color: var(--ink);
+      font-family: inherit; font-size: 13px; font-weight: 500;
+      transition: border-color .2s, box-shadow .2s, background .2s;
+    }
+    .search-input::placeholder { color: var(--muted); }
+    .search-input:focus { border-color: var(--border-strong); }
+    .search-input::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
+    .search-kbd {
+      position: absolute; right: 12px; font-family: var(--font-mono); font-size: 11px;
+      color: var(--ink-3); border: 1px solid var(--border); border-radius: 6px;
+      padding: 1px 7px; background: var(--bg-soft); pointer-events: none; transition: opacity .15s;
+    }
+    .search-input:focus ~ .search-kbd, .search-wrap.has-text .search-kbd { opacity: 0; }
+    .search-clear {
+      position: absolute; right: 8px; width: 24px; height: 24px; border-radius: 50%;
+      border: none; background: var(--bg-soft); color: var(--ink-2); cursor: pointer;
+      display: none; align-items: center; justify-content: center; font-size: 12px; line-height: 1;
+    }
+    .search-wrap.has-text .search-clear { display: inline-flex; }
+    .search-clear:hover { background: var(--chip); color: var(--ink); }
+
+    .results-note { font-family: var(--font-mono); font-size: 11px; color: var(--ink-3); letter-spacing: .03em; margin-top: 14px; min-height: 14px; }
+    .empty-state { display: none; text-align: center; padding: 64px 20px 96px; color: var(--ink-3); }
+    .empty-state.show { display: block; }
+    .empty-state .es-emoji { font-size: 44px; margin-bottom: 12px; }
+    .empty-state .es-title { font-family: var(--font-display); font-weight: 600; font-size: 22px; color: var(--ink); margin-bottom: 6px; }
+    .es-reset { background: none; border: none; color: var(--ink); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; font: inherit; }
+    @media (max-width: 640px) {
+      .search-wrap { margin-left: 0; max-width: none; flex-basis: 100%; order: 99; }
+      .search-input { min-height: 44px; }
+    }
+
     /* ── Grid ──────────────────────────────────────────────── */
     .grid {
       display: grid;
@@ -614,7 +654,14 @@
       <button class="fb" data-f="education">Education</button>
       <button class="fb" data-f="lifestyle">Lifestyle</button>
       <button class="fb" id="sortRecent" title="Sort by most recently updated">🕒 Recent</button>
+      <div class="search-wrap">
+        <span class="search-ico" aria-hidden="true">⌕</span>
+        <input id="projectSearch" class="search-input" type="search" placeholder="Search projects…" aria-label="Search projects by name, description, or tech" autocomplete="off">
+        <kbd class="search-kbd" aria-hidden="true">/</kbd>
+        <button class="search-clear" id="searchClear" type="button" aria-label="Clear search">✕</button>
+      </div>
     </div>
+    <p class="results-note" id="resultsNote" role="status" aria-live="polite"></p>
   </div>
 
   <!-- Grid -->
@@ -972,6 +1019,13 @@
 
   </div>
 
+  <!-- Empty state (shown when search/filter matches nothing) -->
+  <div class="empty-state" id="emptyState">
+    <div class="es-emoji" aria-hidden="true">🔍</div>
+    <p class="es-title">No projects match</p>
+    <p>Try a different search or <button class="es-reset" id="clearAll" type="button">clear filters</button>.</p>
+  </div>
+
   <!-- Artifacts -->
   <div class="artifacts-section">
     <div class="artifacts-hdr">
@@ -1018,17 +1072,42 @@
     setTheme(cur === 'dark' ? 'light' : 'dark');
   });
 
-  // ── Filter ──────────────────────────────────────────────
-  const fBtns = document.querySelectorAll('.fb');
-  const cards = document.querySelectorAll('.card');
+  // ── Filter + Search ─────────────────────────────────────
+  // Note: scope to [data-f] so the "🕒 Recent" sort button (also .fb) doesn't
+  // get treated as a category filter (which blanked the grid).
+  const fBtns = document.querySelectorAll('.fb[data-f]');
+  const cards = Array.from(document.querySelectorAll('.card'));
   let activeFilter = 'all';
+  let searchText = '';
+
+  // Precompute a searchable haystack per card (title + description + tags).
+  cards.forEach(card => {
+    const t = card.querySelector('.c-title')?.textContent || '';
+    const d = card.querySelector('.c-desc')?.textContent || '';
+    const tags = Array.from(card.querySelectorAll('.tag, .cat')).map(e => e.textContent).join(' ');
+    card.dataset.search = (t + ' ' + d + ' ' + tags).toLowerCase();
+  });
+
+  const resultsNote = document.getElementById('resultsNote');
+  const emptyState = document.getElementById('emptyState');
 
   function applyFilters() {
+    let visible = 0;
     cards.forEach(card => {
       const cats = (card.dataset.cats || '').split(' ');
       const catMatch = activeFilter === 'all' || cats.includes(activeFilter);
-      card.classList.toggle('off', !catMatch);
+      const textMatch = !searchText || (card.dataset.search || '').includes(searchText);
+      const show = catMatch && textMatch;
+      card.classList.toggle('off', !show);
+      if (show) visible++;
     });
+    if (emptyState) emptyState.classList.toggle('show', visible === 0);
+    if (resultsNote) {
+      const total = cards.length;
+      resultsNote.textContent = (searchText || activeFilter !== 'all')
+        ? `${visible} of ${total} projects` + (searchText ? ` · “${searchText}”` : '')
+        : `${total} projects`;
+    }
   }
 
   fBtns.forEach(btn => {
@@ -1038,7 +1117,45 @@
       activeFilter = btn.dataset.f;
       applyFilters();
     });
+    // Live count badge per category chip.
+    const f = btn.dataset.f;
+    const n = f === 'all' ? cards.length : cards.filter(c => (c.dataset.cats || '').split(' ').includes(f)).length;
+    const span = document.createElement('span');
+    span.className = 'fb-count';
+    span.textContent = n;
+    btn.appendChild(span);
   });
+
+  // Search box
+  const searchInput = document.getElementById('projectSearch');
+  const searchWrap = searchInput?.closest('.search-wrap');
+  function setSearch(v) {
+    searchText = v.trim().toLowerCase();
+    searchWrap?.classList.toggle('has-text', !!searchInput.value);
+    applyFilters();
+  }
+  searchInput?.addEventListener('input', () => setSearch(searchInput.value));
+  searchInput?.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { searchInput.value = ''; setSearch(''); searchInput.blur(); }
+  });
+  document.getElementById('searchClear')?.addEventListener('click', () => {
+    searchInput.value = ''; setSearch(''); searchInput.focus();
+  });
+  // "/" focuses search unless the user is already typing somewhere.
+  document.addEventListener('keydown', e => {
+    if (e.key === '/' && !/^(input|textarea|select)$/i.test(e.target.tagName) && !e.target.isContentEditable) {
+      e.preventDefault(); searchInput?.focus();
+    }
+  });
+  document.getElementById('clearAll')?.addEventListener('click', () => {
+    fBtns.forEach(b => b.classList.toggle('active', b.dataset.f === 'all'));
+    activeFilter = 'all';
+    if (searchInput) { searchInput.value = ''; searchWrap?.classList.remove('has-text'); }
+    searchText = '';
+    applyFilters();
+  });
+
+  applyFilters();
 
   // ── Live GitHub status (last commit + relative time) ────
   const GH_OWNER_DEFAULT = 'syahmedu';
