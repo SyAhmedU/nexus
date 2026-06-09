@@ -490,14 +490,7 @@
     }
     [data-theme="dark"] body::after { mix-blend-mode: screen; opacity: .05; }
 
-    /* Cursor-following glow */
-    .cursor-glow {
-      position: fixed; pointer-events: none; z-index: 0; width: 520px; height: 520px; border-radius: 50%; left: 0; top: 0;
-      transform: translate(calc(var(--cx, -1000) * 1px - 50%), calc(var(--cy, -1000) * 1px - 50%));
-      background: radial-gradient(circle, rgba(241,69,117,.13) 0%, rgba(146,112,244,.07) 35%, transparent 65%);
-      filter: blur(42px); transition: transform .7s cubic-bezier(.22,1,.36,1); will-change: transform;
-    }
-    [data-theme="dark"] .cursor-glow { background: radial-gradient(circle, rgba(241,69,117,.22) 0%, rgba(146,112,244,.14) 35%, transparent 65%); }
+    /* (cursor-following glow removed for a calm, professional feel) */
 
     /* Soften the existing blobs toward the liquid-drift feel */
     .blob { filter: blur(104px); }
@@ -644,7 +637,6 @@
   <div class="blob b3"></div>
   <div class="dots"></div>
 </div>
-<div class="cursor-glow" aria-hidden="true"></div>
 
 <main class="wrap" id="main-content" tabindex="-1">
 
@@ -1323,16 +1315,7 @@
     cards.forEach(c => { c.style.transitionDelay = '0ms'; });
   }, cards.length * 55 + 700);
 
-  // ── Cursor-following glow (Throughline identity) ────────────
-  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    document.addEventListener('mousemove', (e) => {
-      const root = document.documentElement;
-      root.style.setProperty('--cx', e.clientX);
-      root.style.setProperty('--cy', e.clientY);
-    }, { passive: true });
-  }
-
-  // ── New-age motion: scroll-progress bar + count-up stats ──
+  // ── Scroll-progress bar + count-up stats ──
   (function () {
     const prog = document.getElementById('scroll-prog');
     if (prog) {
