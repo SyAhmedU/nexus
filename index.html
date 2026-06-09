@@ -547,6 +547,21 @@
     /* Spring easing on interactive lifts */
     .fb, .lnk, .theme-toggle { transition: all .55s cubic-bezier(.22,1,.36,1), color .15s, background .15s; }
 
+    /* ── New-age motion kit: scroll progress · hero entrance · count-up ── */
+    #scroll-prog {
+      position: fixed; top: 0; left: 0; height: 3px; width: 0; z-index: 10000;
+      background: var(--grad-warm); box-shadow: 0 0 10px rgba(241,69,117,.5);
+      transition: width .12s linear; pointer-events: none;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .hero > * { opacity: 0; animation: heroRise .7s cubic-bezier(.22,1,.36,1) both; }
+      .hero > *:nth-child(1) { animation-delay: .05s }
+      .hero > *:nth-child(2) { animation-delay: .16s }
+      .hero > *:nth-child(3) { animation-delay: .28s }
+      .hero > *:nth-child(4) { animation-delay: .40s }
+    }
+    @keyframes heroRise { from { opacity: 0; transform: translateY(18px) } to { opacity: 1; transform: translateY(0) } }
+
     @media (prefers-reduced-motion: reduce) {
       .hero-h .grad, .hero-h .grad-cool { animation: none !important; }
       .cursor-glow { transition: none !important; }
@@ -599,6 +614,7 @@
 <body>
 
 <a class="skip-link" href="#main-content">Skip to content</a>
+<div id="scroll-prog" aria-hidden="true"></div>
 
 <!-- SYED BRAND BAR -->
 <div class="syed-bar">
@@ -1315,6 +1331,37 @@
       root.style.setProperty('--cy', e.clientY);
     }, { passive: true });
   }
+
+  // ── New-age motion: scroll-progress bar + count-up stats ──
+  (function () {
+    const prog = document.getElementById('scroll-prog');
+    if (prog) {
+      const upd = () => {
+        const h = document.documentElement;
+        const max = h.scrollHeight - h.clientHeight;
+        prog.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
+      };
+      addEventListener('scroll', upd, { passive: true });
+      addEventListener('resize', upd, { passive: true });
+      upd();
+    }
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function countUp(el) {
+      const target = parseInt(el.textContent, 10);
+      if (!isFinite(target)) return;
+      if (reduce) { el.textContent = target; return; }
+      const dur = 1100, start = performance.now();
+      (function tick(now) {
+        const t = Math.min(1, (now - start) / dur);
+        el.textContent = Math.round(target * (1 - Math.pow(1 - t, 3)));
+        if (t < 1) requestAnimationFrame(tick); else el.textContent = target;
+      })(start);
+    }
+    const so = new IntersectionObserver((es) => {
+      es.forEach(e => { if (e.isIntersecting) { countUp(e.target); so.unobserve(e.target); } });
+    }, { threshold: 0.6 });
+    document.querySelectorAll('.stat-n').forEach(el => so.observe(el));
+  })();
 </script>
 
 <!-- ══ SYED AURORA — living WebGL ambient engine (identity v2) ══ -->
