@@ -413,6 +413,15 @@
     /* The hub's own card — non-interactive; you're already viewing it. */
     .lnk-current { background: transparent; color: var(--ink-3); border: 1px dashed var(--border-strong); cursor: default; pointer-events: none; }
 
+    /* narrated tour videos (throughline-media) — button injected per card by the TOURS script */
+    .ltour { background: transparent; color: var(--ink); border: 1px solid var(--border-strong); cursor: pointer; font: inherit; font-weight: 700; font-size: 13.5px; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+    .ltour:hover { background: var(--bg-soft); }
+    .ltour .tplay { display: inline-grid; place-items: center; width: 17px; height: 17px; border-radius: 999px; background: linear-gradient(135deg, #FF9656, #F14575 55%, #9270F4); color: #fff; font-size: 7px; line-height: 1; }
+    .tour-box { position: fixed; inset: 0; z-index: 99999; background: rgba(8,5,14,.72); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); display: grid; place-items: center; padding: 24px; }
+    .tour-wrap { width: min(1100px, 94vw); display: flex; flex-direction: column; gap: 10px; }
+    .tour-wrap video { width: 100%; border-radius: 16px; border: 1px solid rgba(203,184,232,.3); background: #000; }
+    .tour-x { align-self: flex-end; padding: 6px 14px; border-radius: 999px; border: 1px solid rgba(203,184,232,.4); background: transparent; color: #cbb8e8; font: 600 13px/1 'Plus Jakarta Sans', system-ui, sans-serif; cursor: pointer; }
+
     /* per-card gradient palette assignments */
     .g-warm { --card-grad: var(--grad-warm); }
     .g-cool { --card-grad: var(--grad-iris); }
@@ -1449,5 +1458,72 @@ var s=document.createElement('style');s.id='syed-juice';s.textContent=css;docume
 </script>
 
 <!-- (magnetic cursor-pull effect removed for a professional, calm feel) -->
+
+<!-- Narrated tour videos — adds a "▶ Tour" button to each card that has one.
+     Videos rendered from E:\video\throughline-explainer (every on-screen count
+     verified against real data), served from the throughline-media Pages repo. -->
+<script>
+(function () {
+  const MEDIA = 'https://syahmedu.github.io/throughline-media/videos/';
+  const T = (slug) => ({ v: MEDIA + 'tours/' + slug + '.mp4', p: MEDIA + 'tours/posters/' + slug + '.jpg' });
+  const TOURS = {
+    'throughline-studio': { v: 'https://throughline-studio.vercel.app/tour.mp4', p: 'https://throughline-studio.vercel.app/tour-poster.jpg' },
+    'paperpulse': { v: MEDIA + 'papercards-tour.mp4', p: 'https://papercards.vercel.app/tour-poster.jpg' },
+    'bookscope': T('bookscope'),
+    'syeds-research-book': T('syeds-research-book'),
+    'fallacyscope': T('fallacyscope'),
+    'scholarscope': T('scholarscope'),
+    'toolsscope': T('toolsscope'),
+    'theoryscope': T('theoryscope'),
+    'tracewise': T('tracewise'),
+    'researchflow': T('researchflow'),
+    'karmamap': T('karmamap'),
+    'journaltime': T('journaltime'),
+    'scalebase': T('scalescope'),
+    'task-manager': T('taskflow'),
+    'career-compass': T('career-compass'),
+    'ideabox': T('ideabox'),
+    'cadence': T('cadence'),
+    'timetable-generator': T('timetable-generator'),
+    'bachelor-meal-plan': T('bachelor-meal-plan'),
+  };
+
+  function openTour(tour, name) {
+    if (document.querySelector('.tour-box')) return;
+    const bd = document.createElement('div');
+    bd.className = 'tour-box';
+    const wrap = document.createElement('div');
+    wrap.className = 'tour-wrap';
+    wrap.setAttribute('role', 'dialog');
+    wrap.setAttribute('aria-modal', 'true');
+    wrap.setAttribute('aria-label', name + ' narrated tour');
+    const v = document.createElement('video');
+    v.src = tour.v; v.poster = tour.p;
+    v.controls = true; v.autoplay = true; v.playsInline = true;
+    const x = document.createElement('button');
+    x.type = 'button'; x.className = 'tour-x'; x.textContent = 'Close ✕';
+    function close() { bd.remove(); document.removeEventListener('keydown', onKey); }
+    function onKey(e) { if (e.key === 'Escape') close(); }
+    bd.addEventListener('click', (e) => { if (e.target === bd) close(); });
+    x.addEventListener('click', close);
+    document.addEventListener('keydown', onKey);
+    wrap.append(v, x); bd.append(wrap); document.body.append(bd);
+  }
+
+  document.querySelectorAll('.card[data-repo]').forEach((card) => {
+    const name = (card.dataset.repo || '').split('/')[1];
+    const tour = TOURS[name];
+    const links = card.querySelector('.c-links');
+    if (!tour || !links) return;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'lnk ltour';
+    btn.setAttribute('aria-label', 'Watch the ' + (card.querySelector('.c-title')?.textContent || name) + ' tour');
+    btn.innerHTML = '<span class="tplay">▶</span> Tour';
+    btn.addEventListener('click', () => openTour(tour, card.querySelector('.c-title')?.textContent || name));
+    links.append(btn);
+  });
+})();
+</script>
 </body>
 </html>
