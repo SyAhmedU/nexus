@@ -4,13 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Nexus — Syed Asrar</title>
-  <meta name="description" content="AI tools, research technology, and web applications by Syed Asrar — 22 shipped projects spanning research methodology, productivity, and education.">
+  <meta name="description" content="AI tools, research technology, and web applications by Syed Asrar — 23 shipped projects spanning research methodology, productivity, and education.">
   <meta name="theme-color" content="#FBF7EF">
   <link rel="canonical" href="https://syahmedu.github.io/nexus/">
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="Nexus — Syed Asrar">
-  <meta property="og:description" content="AI tools, research technology, and web applications by Syed Asrar — 22 shipped projects spanning research methodology, productivity, and education.">
+  <meta property="og:description" content="AI tools, research technology, and web applications by Syed Asrar — 23 shipped projects spanning research methodology, productivity, and education.">
   <meta property="og:url" content="https://syahmedu.github.io/nexus/">
   <meta property="og:image" content="https://syahmedu.github.io/nexus/og.svg">
   <meta property="og:image:width" content="1200">
@@ -19,9 +19,9 @@
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Nexus — Syed Asrar">
-  <meta name="twitter:description" content="AI tools, research technology, and web applications — 22 shipped projects.">
+  <meta name="twitter:description" content="AI tools, research technology, and web applications — 23 shipped projects.">
   <meta name="twitter:image" content="https://syahmedu.github.io/nexus/og.svg">
-  <meta name="twitter:image:alt" content="Nexus — the portfolio of Syed Asrar: 22 shipped AI, research, and web projects.">
+  <meta name="twitter:image:alt" content="Nexus — the portfolio of Syed Asrar: 23 shipped AI, research, and web projects.">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="author" content="Syed Ahmed">
   <script type="application/ld+json">
@@ -35,7 +35,7 @@
       "@type": "Person",
       "name": "Syed Asrar",
       "url": "https://syahmedu.github.io/nexus/",
-      "description": "Builder of AI tools, research technology, and web applications — 22 shipped projects across research methodology, productivity, and education.",
+      "description": "Builder of AI tools, research technology, and web applications — 23 shipped projects across research methodology, productivity, and education.",
       "knowsAbout": ["research methodology", "AI applications", "social science", "web development"]
     }
   }
@@ -684,13 +684,13 @@
 
   <!-- Hero -->
   <section class="hero">
-    <div class="hero-pill">Portfolio · 22 Projects</div>
+    <div class="hero-pill">Portfolio · <span id="pillCount">23</span> Projects</div>
     <h1 class="hero-h">Building <span class="grad">tools</span><br>for <span class="grad-cool">research &amp; work.</span></h1>
     <p class="hero-p">AI tools, research technology, and web applications — designed to remove the friction between an idea and the thing that helps people.</p>
     <div class="stats">
-      <div class="stat"><span class="stat-n">22</span><span class="stat-l">Projects<br>shipped</span></div>
+      <div class="stat"><span class="stat-n" id="statCount">23</span><span class="stat-l">Projects<br>shipped</span></div>
       <div class="stat"><span class="stat-n" id="statFresh">–</span><span class="stat-l">Updated<br>this week</span></div>
-      <div class="stat"><span class="stat-n">22</span><span class="stat-l">Live &amp;<br>deployed</span></div>
+      <div class="stat"><span class="stat-n" id="statLive">23</span><span class="stat-l">Live &amp;<br>deployed</span></div>
     </div>
   </section>
 
@@ -1144,6 +1144,12 @@
   // get treated as a category filter (which blanked the grid).
   const fBtns = document.querySelectorAll('.fb[data-f]');
   const cards = Array.from(document.querySelectorAll('.card'));
+  // Keep the hero counts honest: derive them from the actual card list so
+  // they can never drift from the index again.
+  ['pillCount', 'statCount', 'statLive'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = cards.length;
+  });
   let activeFilter = 'all';
   let searchText = '';
 
