@@ -250,8 +250,23 @@
     }
     .stat-l { font-size: 13px; color: var(--ink-3); font-weight: 500; line-height: 1.2; }
 
+    /* ── Editorial index rule ──────────────────────────────── */
+    .index-rule {
+      display: flex; align-items: center; gap: 16px;
+      margin-top: 48px;
+    }
+    .index-rule::before, .index-rule::after {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-strong));
+    }
+    .index-rule::after { background: linear-gradient(90deg, var(--border-strong), transparent); }
+    .index-rule span {
+      font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+      letter-spacing: .22em; text-transform: uppercase; color: var(--ink-3);
+    }
+
     /* ── Filter ────────────────────────────────────────────── */
-    .filter { padding: 56px 0 28px; }
+    .filter { padding: 18px 0 28px; }
     .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
     .fb {
       padding: 9px 18px; border-radius: 999px;
@@ -548,7 +563,12 @@
       animation: shimmerText 16s ease-in-out infinite;
     }
     @keyframes shimmerText { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
-    .stat-n { font-family: var(--font-display); font-weight: 600; }
+    .stat-n {
+      font-family: var(--font-display); font-weight: 600;
+      background: var(--grad-warm);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent;
+    }
     .c-title { font-family: var(--font-display); font-weight: 600; letter-spacing: -.015em; }
     .a-title { font-family: var(--font-display); font-weight: 600; }
 
@@ -668,13 +688,14 @@
     <h1 class="hero-h">Building <span class="grad">tools</span><br>for <span class="grad-cool">research &amp; work.</span></h1>
     <p class="hero-p">AI tools, research technology, and web applications — designed to remove the friction between an idea and the thing that helps people.</p>
     <div class="stats">
-      <div class="stat"><span class="stat-n">17</span><span class="stat-l">Projects<br>shipped</span></div>
-      <div class="stat"><span class="stat-n">7</span><span class="stat-l">AI-powered<br>features</span></div>
-      <div class="stat"><span class="stat-n">17</span><span class="stat-l">Live &amp;<br>deployed</span></div>
+      <div class="stat"><span class="stat-n">22</span><span class="stat-l">Projects<br>shipped</span></div>
+      <div class="stat"><span class="stat-n" id="statFresh">–</span><span class="stat-l">Updated<br>this week</span></div>
+      <div class="stat"><span class="stat-n">22</span><span class="stat-l">Live &amp;<br>deployed</span></div>
     </div>
   </section>
 
   <!-- Filter -->
+  <div class="index-rule" aria-hidden="true"><span>The index</span></div>
   <div class="filter">
     <div class="filter-bar">
       <button class="fb active" data-f="all">All projects</button>
@@ -1284,6 +1305,8 @@
       }
     });
 
+    updateFreshStat();
+
     // Cache still fresh → don't touch the network at all (saves the 60/hr budget).
     if (fresh) return;
 
@@ -1309,6 +1332,20 @@
     if (Object.keys(updated).length) {
       saveCache({ ...cache, ...updated });
     }
+    updateFreshStat();
+  }
+
+  // The hero's living stat — how many projects were pushed in the last 7 days.
+  // Derived from the same per-card pushed_at data the meta rows render.
+  function updateFreshStat() {
+    const el = document.getElementById('statFresh');
+    if (!el) return;
+    const seen = new Set();
+    document.querySelectorAll('.card[data-repo]').forEach(c => {
+      const iso = c.dataset.pushed;
+      if (iso && (Date.now() - new Date(iso).getTime()) <= 7 * 86400000) seen.add(c.dataset.repo);
+    });
+    if (seen.size) el.textContent = seen.size;
   }
 
   loadGitHubStatus();
