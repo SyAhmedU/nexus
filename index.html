@@ -422,6 +422,18 @@
     .tour-wrap video { width: 100%; border-radius: 16px; border: 1px solid rgba(203,184,232,.3); background: #000; }
     .tour-x { align-self: flex-end; padding: 6px 14px; border-radius: 999px; border: 1px solid rgba(203,184,232,.4); background: transparent; color: #cbb8e8; font: 600 13px/1 'Plus Jakarta Sans', system-ui, sans-serif; cursor: pointer; }
 
+    /* ── Featured card — the capstone gets editorial weight ── */
+    .card.featured {
+      background: linear-gradient(180deg, color-mix(in srgb, var(--card) 96%, #F14575), var(--card) 42%);
+      border-color: color-mix(in srgb, #F14575 16%, var(--border));
+    }
+    .card.featured::before { height: 5px; opacity: 1; }
+    @media (min-width: 921px) {
+      .card.featured { grid-column: span 2; padding: 26px; }
+      .card.featured .c-title { font-size: 27px; }
+      .card.featured .c-desc { font-size: 14.5px; max-width: 64ch; }
+    }
+
     /* per-card gradient palette assignments */
     .g-warm { --card-grad: var(--grad-warm); }
     .g-cool { --card-grad: var(--grad-iris); }
@@ -528,7 +540,8 @@
     }
 
     /* Display serif on the headings */
-    .hero-h { font-family: var(--font-display); font-weight: 600; letter-spacing: -.035em; }
+    .hero-h, .c-title, .a-title, .es-title { font-optical-sizing: auto; }
+    .hero-h { font-family: var(--font-display); font-weight: 600; letter-spacing: -.035em; text-wrap: balance; }
     .hero-h .grad, .hero-h .grad-cool {
       font-style: italic; font-weight: 500;
       background-size: 220% 220%; background-position: 0% 50%;
@@ -685,7 +698,7 @@
   <div class="grid" id="grid">
 
     <!-- Throughline Studio -->
-    <div class="card g-warm" data-cats="research web ai data" data-repo="syahmedu/throughline-studio">
+    <div class="card g-warm featured" data-cats="research web ai data" data-repo="syahmedu/throughline-studio">
       <div class="c-top"><span class="c-ico">🧵</span><span class="c-num">#23</span></div>
       <div class="c-title">Throughline Studio</div>
       <div class="c-desc">The shippable capstone — conduct social-science research <strong>A&nbsp;→&nbsp;Z</strong> in one connected workspace. A research project advances through seven lifecycle stages (Discover · Frame · Measure · Collect · Analyze · Write · Publish), each unifying the suite tools you already use and carrying your research question across every hand-off. The single thread that runs the whole way through: discover the literature, frame the question, build the measures, collect and analyze the data, then write and place the paper. React 19 + Vite, hand-crafted Throughline design system, client-first persistence, graceful AI seam.</div>
