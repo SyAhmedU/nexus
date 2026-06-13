@@ -43,7 +43,7 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='9' fill='url(%23g)'/><text x='50%25' y='56%25' dominant-baseline='middle' text-anchor='middle' font-family='system-ui' font-weight='900' font-size='18' fill='white'>N</text><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%25' stop-color='%23ff8a3d'/><stop offset='50%25' stop-color='%23f02e65'/><stop offset='100%25' stop-color='%237c3aed'/></linearGradient></defs></svg>" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,400..700,0,0;1,9..144,400..600,0,1&family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
   <!-- pre-paint theme to avoid flash -->
   <script>(function(){try{var t=localStorage.getItem('syed-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
@@ -220,11 +220,15 @@
       color: var(--ink); margin-bottom: 22px;
     }
     .hero-h .grad {
+      font-family: 'Fraunces', Georgia, serif; font-style: italic; font-weight: 500;
+      font-variation-settings: 'SOFT' 100, 'WONK' 1; letter-spacing: -.02em;
       background: var(--grad-warm);
       -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
       color: transparent;
     }
     .hero-h .grad-cool {
+      font-family: 'Fraunces', Georgia, serif; font-style: italic; font-weight: 500;
+      font-variation-settings: 'SOFT' 100, 'WONK' 1; letter-spacing: -.02em;
       background: var(--grad-iris);
       -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
       color: transparent;
