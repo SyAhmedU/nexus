@@ -665,14 +665,6 @@
       footer { padding: 24px 16px calc(24px + var(--safe-b)); }
     }
   </style>
-<!-- SYED-PWA -->
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="icon.svg">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Nexus">
-<!-- /SYED-PWA -->
 <!-- SYED-GATE · entry password, re-locks every load · injected by research-suite/tools/gate/inject.mjs -->
 <script>(function(){"use strict";
 if(window.__syedGate)return;window.__syedGate=1;
@@ -696,6 +688,14 @@ function mk(){
 mk();if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",mk);
 })();</script>
 <!-- /SYED-GATE -->
+<!-- SYED-PWA -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Nexus">
+<!-- /SYED-PWA -->
 </head>
 <body>
 
@@ -818,6 +818,38 @@ mk();if(document.readyState==="loading")document.addEventListener("DOMContentLoa
     </div>
 
     <!-- Journal Timelines -->
+    <!-- Callback -->
+    <div class="card g-warm" data-cats="ai web education">
+      <div class="c-top"><span class="c-ico">📄</span><span class="c-num">#31</span></div>
+      <div class="c-title">Callback</div>
+      <div class="c-desc">A resume &amp; LinkedIn grader for students and early-career applicants. Paste your resume (or load a <code>.docx</code>), optionally paste a job description, and get a <strong>transparent, rule-based scorecard</strong> — action verbs vs weak openers (&ldquo;responsible for&hellip;&rdquo;), quantified impact, clichés, length, and how many of the JD's key terms your resume actually mentions. Every score is a <strong>stated heuristic, not a real ATS</strong>, and the whole grade runs in your browser — your resume is never uploaded. An optional AI layer sharpens a single bullet using <strong>only the facts already in it</strong> (missing numbers become a <code>[add metric]</code> placeholder, never a fabricated one). Single-file HTML + one Groq function.</div>
+      <div class="c-tags">
+        <span class="cat ca">AI</span>
+        <span class="cat cw">Web</span>
+        <span class="tag">Resume grader</span><span class="tag">Placement prep</span><span class="tag">JD keyword match</span><span class="tag">Heuristic, not ATS</span><span class="tag">Offline-first</span><span class="tag">No-fabrication</span>
+      </div>
+      <div class="c-meta" data-meta></div>
+      <div class="c-links">
+        <a class="lnk lp" href="https://callback-syahmedus-projects.vercel.app" target="_blank" rel="noopener">Open ↗</a>
+      </div>
+    </div>
+
+    <!-- Greenroom -->
+    <div class="card g-warm" data-cats="ai web education">
+      <div class="c-top"><span class="c-ico">🎙</span><span class="c-num">#32</span></div>
+      <div class="c-title">Greenroom</div>
+      <div class="c-desc">The room before you go on. A mock-interview coach for placement students — pick a track (HR/behavioral, technical viva, aptitude/fit), get a real question, and answer it <strong>out loud</strong> (on-device speech) or by typing. Greenroom gives an instant, rule-based read of how the answer lands: <strong>STAR-structure</strong> detection for behavioral answers, filler words, hedging, specificity (numbers/scale) and spoken length — explicitly a rehearsal aid, <strong>not a verdict</strong>. An optional AI coach reads <strong>only your answer</strong> and returns strengths, improvements, and one generic STAR skeleton with <code>[placeholders]</code> — it never invents facts, numbers, or experiences about you. The sibling to Callback: together they cover the paper and the room. Single-file HTML + one Groq function.</div>
+      <div class="c-tags">
+        <span class="cat ca">AI</span>
+        <span class="cat cw">Web</span>
+        <span class="tag">Mock interview</span><span class="tag">Placement prep</span><span class="tag">STAR feedback</span><span class="tag">Speech input</span><span class="tag">Offline-first</span><span class="tag">No-fabrication</span>
+      </div>
+      <div class="c-meta" data-meta></div>
+      <div class="c-links">
+        <a class="lnk lp" href="https://greenroom-syahmedus-projects.vercel.app" target="_blank" rel="noopener">Open ↗</a>
+      </div>
+    </div>
+
     <div class="card g-warm" data-cats="research web data" data-repo="syahmedu/journal-timelines">
       <div class="c-top"><span class="c-ico">⏱</span><span class="c-num">#28</span></div>
       <div class="c-title">Journal Timelines</div>
