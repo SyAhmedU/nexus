@@ -664,6 +664,29 @@
 
       footer { padding: 24px 16px calc(24px + var(--safe-b)); }
     }
+
+    /* ── 2026-07 pass: story groups · timeline bands · sparklines ·
+       reachability · read-more · start-here · deep-link highlight ── */
+    .grid-sep { grid-column: 1 / -1; display: flex; align-items: center; gap: 14px; margin: 26px 0 2px; min-width: 0; }
+    .grid-sep .gs-label { font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-3); white-space: nowrap; }
+    .grid-sep .gs-note { font-size: 12px; color: var(--muted); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .grid-sep::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border-strong), transparent); }
+    .badge-start { font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing: .08em; color: #fff; background: var(--grad-warm); padding: 4px 9px; border-radius: 999px; box-shadow: 0 4px 12px -4px rgba(240,46,101,.5); white-space: nowrap; }
+    .spark { display: inline-block; vertical-align: middle; opacity: .9; }
+    .reach { display: inline-flex; align-items: center; gap: 5px; }
+    .reach::before { content: ''; width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .reach.up::before { background: #22c55e; box-shadow: 0 0 6px rgba(34,197,94,.7); }
+    .reach.down::before { background: #f59e0b; box-shadow: 0 0 6px rgba(245,158,11,.6); }
+    .c-desc.clamp { display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; }
+    .read-more { align-self: flex-start; background: none; border: none; padding: 0 0 2px; color: var(--ink); font: 600 12.5px/1 'Plus Jakarta Sans', system-ui, sans-serif; cursor: pointer; border-bottom: 2px solid #F14575; }
+    .read-more:hover { color: #F14575; border-bottom-color: #9270F4; }
+    .tag { cursor: pointer; transition: background .15s, color .15s; }
+    .tag:hover, .tag:focus-visible { background: var(--border-strong); color: var(--ink); }
+    @keyframes cardHl { 0% { box-shadow: 0 0 0 3px var(--ring), var(--shadow); } 100% { box-shadow: var(--shadow); } }
+    .card.hl { animation: cardHl 2.4s ease-out 1; }
+    .c-num { cursor: copy; }
+    #copy-toast { position: fixed; bottom: 22px; left: 50%; transform: translate(-50%, 8px); background: var(--ink); color: var(--bg-2); padding: 9px 18px; border-radius: 999px; font: 600 12.5px/1 'Plus Jakarta Sans', system-ui, sans-serif; opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; z-index: 10001; }
+    #copy-toast.show { opacity: 1; transform: translate(-50%, 0); }
   </style>
 <!-- SYED-GATE · entry password, re-locks every load · injected by research-suite/tools/gate/inject.mjs -->
 <script>(function(){"use strict";
@@ -1251,7 +1274,7 @@ mk();if(document.readyState==="loading")document.addEventListener("DOMContentLoa
     <div class="card g-warm" data-cats="web" data-repo="syahmedu/nexus">
       <div class="c-top"><span class="c-ico">🧬</span><span class="c-num">#02</span></div>
       <div class="c-title">Nexus</div>
-      <div class="c-desc">The portfolio you're looking at right now. Single-file HTML with light/dark theming, filterable project grid, and search — a living index of everything built.</div>
+      <div class="c-desc">The portfolio you're looking at right now. Single-file HTML with light/dark theming, a story-grouped project grid (suite · campus · personal), fuzzy search, clickable tag facets, live GitHub commit sparklines, honest deploy-reachability dots, a push-date timeline view, and per-card share links — a living index of everything built.</div>
       <div class="c-tags">
         <span class="cat cb">Web</span>
         <span class="tag">Single File</span><span class="tag">Vanilla JS</span>
@@ -1342,17 +1365,31 @@ mk();if(document.readyState==="loading")document.addEventListener("DOMContentLoa
   const resultsNote = document.getElementById('resultsNote');
   const emptyState = document.getElementById('emptyState');
 
+  // Fuzzy fallback: each query word must be an in-order subsequence of some
+  // haystack word (so "scalescp" still finds ScaleScope).
+  function fuzzyWord(hayWords, w) {
+    return hayWords.some(tok => { let i = 0; for (const ch of tok) { if (ch === w[i]) i++; if (i === w.length) return true; } return false; });
+  }
+  function fuzzyMatch(hay, q) {
+    const words = q.split(/\s+/).filter(Boolean);
+    if (!words.length) return true;
+    const hayWords = hay.split(/[^a-z0-9]+/);
+    return words.every(w => fuzzyWord(hayWords, w));
+  }
+
   function applyFilters() {
     let visible = 0;
     cards.forEach(card => {
       const cats = (card.dataset.cats || '').split(' ');
       const catMatch = activeFilter === 'all' || cats.includes(activeFilter);
-      const textMatch = !searchText || (card.dataset.search || '').includes(searchText);
+      const hay = card.dataset.search || '';
+      const textMatch = !searchText || hay.includes(searchText) || fuzzyMatch(hay, searchText);
       const show = catMatch && textMatch;
       card.classList.toggle('off', !show);
       if (show) visible++;
     });
     if (emptyState) emptyState.classList.toggle('show', visible === 0);
+    if (window.__updateSeps) window.__updateSeps();
     if (resultsNote) {
       const total = cards.length;
       resultsNote.textContent = (searchText || activeFilter !== 'all')
@@ -1449,19 +1486,30 @@ mk();if(document.readyState==="loading")document.addEventListener("DOMContentLoa
     return 'dot-cold';                       // cold gray
   }
 
+  // Tiny commits-per-week sparkline from real GitHub participation stats.
+  function sparkSVG(weeks) {
+    const w = 56, h = 14, max = Math.max(...weeks, 1);
+    const pts = weeks.map((v, i) => `${((i / (weeks.length - 1)) * w).toFixed(1)},${(h - 2 - (v / max) * (h - 4)).toFixed(1)}`).join(' ');
+    return `<svg class="spark" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" role="img" aria-label="commits per week, last ${weeks.length} weeks"><title>Commits/week · last ${weeks.length} weeks</title><polyline points="${pts}" fill="none" stroke="#F14575" stroke-width="1.5"/></svg>`;
+  }
+
   function renderMeta(card, repo, data) {
     const meta = card.querySelector('[data-meta]');
     if (!meta) return;
+    const keepReach = meta.querySelector('.reach'); // reachability span survives re-renders
     if (!data) {
       meta.innerHTML = `<a href="https://github.com/${repo}" target="_blank" rel="noopener" class="pulse">⎇ ${repo.split('/')[1]}</a>`;
+      if (keepReach) meta.appendChild(keepReach);
       return;
     }
     const iso = data.pushed_at;
+    const spark = Array.isArray(data.weeks) && data.weeks.length > 1 && data.weeks.some(v => v > 0) ? sparkSVG(data.weeks) : '';
     meta.innerHTML = `
       <a href="https://github.com/${repo}" target="_blank" rel="noopener">
         <span class="live-dot ${dotClass(iso)}"></span>Updated ${relativeTime(iso)}
       </a>
-      <a href="https://github.com/${repo}" target="_blank" rel="noopener" title="GitHub stars">★ ${data.stargazers_count ?? 0}</a>`;
+      <a href="https://github.com/${repo}" target="_blank" rel="noopener" title="GitHub stars">★ ${data.stargazers_count ?? 0}</a>${spark}`;
+    if (keepReach) meta.appendChild(keepReach);
     card.dataset.pushed = iso;
   }
 
@@ -1499,10 +1547,17 @@ mk();if(document.readyState==="loading")document.addEventListener("DOMContentLoa
       const repo = card.dataset.repo;
       try {
         const data = await fetchRepo(repo);
+        // Commit activity (participation) — best-effort; 202/missing just skips the sparkline.
+        let weeks;
+        try {
+          const pr = await fetch(`https://api.github.com/repos/${repo}/stats/participation`, { headers: { 'Accept': 'application/vnd.github+json' } });
+          if (pr.ok) { const pj = await pr.json(); if (Array.isArray(pj.all)) weeks = pj.all.slice(-12); }
+        } catch {}
         const slim = {
           pushed_at: data.pushed_at,
           stargazers_count: data.stargazers_count,
           html_url: data.html_url,
+          weeks,
         };
         updated[repo] = slim;
         renderMeta(card, repo, slim);
@@ -1604,6 +1659,221 @@ mk();if(document.readyState==="loading")document.addEventListener("DOMContentLoa
     }, { threshold: 0.6 });
     document.querySelectorAll('.stat-n').forEach(el => so.observe(el));
   })();
+</script>
+
+<script>
+/* ── 2026-07 pass: story grouping · timeline bands · start-here badges ·
+     read-more clamps · tag faceting · deep links · live reachability.
+     All client-side, nothing invented — every signal is a real fetch/date. ── */
+(function () {
+  const grid = document.getElementById('grid');
+  const allCards = Array.from(grid.querySelectorAll('.card'));
+  const titleOf = c => (c.querySelector('.c-title')?.textContent || '').trim();
+
+  // ── Story grouping (the default reading order) ──
+  const GROUPS = [
+    ['The research suite', 'one thread — read, frame, measure, collect, analyze, write, publish', [
+      'Throughline Studio', 'Throughline — Research Suite', 'PaperCards', 'ResearchFlow', 'TheoryScope',
+      'ScaleScope', 'ToolsScope', 'JournalTime', "Syed's Research Book", 'BookScope', 'ScholarScope',
+      'FallacyScope', 'Cadence', 'Journal Timelines', 'Throughline CS', 'Paper Dissection Workshop', 'WordMap']],
+    ['Campus & career', 'the FACE Prep @ AMET world', [
+      'FACE Prep Campus', 'TaskFlow', 'Timetable Generator', 'Career Compass', 'Callback', 'Greenroom', 'KarmaMap']],
+    ['Personal tools & experiments', 'built for daily life', [
+      'MirrorScope', 'Tracewise', 'Bachelor Meal Plan', 'My Thoughts', 'Rethink with AI', 'IdeaBox', 'Nexus']],
+  ];
+  const groupOf = c => { const t = titleOf(c); const gi = GROUPS.findIndex(g => g[2].includes(t)); return gi === -1 ? GROUPS.length - 1 : gi; };
+
+  function mkSep(cls, label, note) {
+    const d = document.createElement('div');
+    d.className = 'grid-sep ' + cls;
+    const l = document.createElement('span'); l.className = 'gs-label'; l.textContent = label; d.appendChild(l);
+    if (note) { const n = document.createElement('span'); n.className = 'gs-note'; n.textContent = note; d.appendChild(n); }
+    return d;
+  }
+
+  const storySeps = [];
+  function layoutStory() {
+    grid.querySelectorAll('.sep-time').forEach(el => el.remove());
+    GROUPS.forEach((g, gi) => {
+      let sep = storySeps[gi];
+      if (!sep) { sep = mkSep('sep-story', g[0], g[1]); storySeps[gi] = sep; }
+      sep.style.display = '';
+      grid.appendChild(sep);
+      allCards
+        .filter(c => groupOf(c) === gi)
+        .sort((a, b) => g[2].indexOf(titleOf(a)) - g[2].indexOf(titleOf(b)))
+        .forEach(c => grid.appendChild(c));
+    });
+  }
+
+  // Timeline bands while "🕒 Recent" is on — recency from real pushed_at dates.
+  function layoutRecent() {
+    storySeps.forEach(s => s && (s.style.display = 'none'));
+    grid.querySelectorAll('.sep-time').forEach(el => el.remove());
+    const now = Date.now();
+    const bandOf = c => {
+      const iso = c.dataset.pushed;
+      if (!iso) return 4;
+      const d = (now - new Date(iso).getTime()) / 86400000;
+      if (d <= 7) return 0; if (d <= 30) return 1; if (d <= 90) return 2; return 3;
+    };
+    const LABELS = ['This week', 'This month', 'This quarter', 'Earlier', 'No public repo data'];
+    const sorted = allCards.slice().sort((a, b) =>
+      (b.dataset.pushed ? new Date(b.dataset.pushed).getTime() : 0) - (a.dataset.pushed ? new Date(a.dataset.pushed).getTime() : 0));
+    let cur = -1;
+    sorted.forEach(c => {
+      const b = bandOf(c);
+      if (b !== cur) { cur = b; grid.appendChild(mkSep('sep-time', LABELS[b], b === 4 ? '' : 'by last push')); }
+      grid.appendChild(c);
+    });
+  }
+
+  // A story header hides when its whole group is filtered out (or while sorting).
+  window.__updateSeps = function () {
+    const sorting = typeof sortByRecent !== 'undefined' && sortByRecent;
+    storySeps.forEach((sep, gi) => {
+      if (!sep) return;
+      if (sorting) { sep.style.display = 'none'; return; }
+      const any = allCards.some(c => groupOf(c) === gi && !c.classList.contains('off'));
+      sep.style.display = any ? '' : 'none';
+    });
+  };
+
+  layoutStory();
+  window.__updateSeps();
+
+  // Re-layout after the original 🕒 Recent handler flips the flag.
+  document.getElementById('sortRecent')?.addEventListener('click', () => {
+    if (sortByRecent) layoutRecent(); else layoutStory();
+    window.__updateSeps();
+  });
+
+  // ── "★ Start here" on the three front doors ──
+  ['Throughline Studio', "Syed's Research Book", 'FACE Prep Campus'].forEach(t => {
+    const c = allCards.find(x => titleOf(x) === t);
+    const top = c?.querySelector('.c-top');
+    if (top) {
+      const b = document.createElement('span');
+      b.className = 'badge-start'; b.textContent = '★ Start here';
+      top.insertBefore(b, top.lastElementChild);
+    }
+  });
+
+  // ── Read more: clamp the longest descriptions (progressive disclosure) ──
+  allCards.forEach(c => {
+    const d = c.querySelector('.c-desc');
+    if (!d || d.textContent.length < 460) return;
+    d.classList.add('clamp');
+    const btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'read-more'; btn.textContent = 'Read more';
+    btn.setAttribute('aria-expanded', 'false');
+    btn.addEventListener('click', () => {
+      const open = !d.classList.toggle('clamp');
+      btn.textContent = open ? 'Show less' : 'Read more';
+      btn.setAttribute('aria-expanded', String(open));
+    });
+    d.after(btn);
+  });
+
+  // ── Tags are facets: click/Enter filters the grid by that tag ──
+  const searchBox = document.getElementById('projectSearch');
+  document.querySelectorAll('.card .tag').forEach(tag => {
+    tag.setAttribute('role', 'button'); tag.tabIndex = 0; tag.title = 'Filter projects by this';
+    const go = () => {
+      if (!searchBox) return;
+      searchBox.value = tag.textContent.trim();
+      searchBox.dispatchEvent(new Event('input'));
+    };
+    tag.addEventListener('click', go);
+    tag.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+  });
+
+  // ── Keyboard nav: ↓/↑ walk visible cards from the search box or grid ──
+  function visibleLinks() {
+    return allCards.filter(c => !c.classList.contains('off'))
+      .map(c => c.querySelector('.c-links .lnk'))
+      .filter(Boolean);
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+    const links = visibleLinks();
+    if (!links.length) return;
+    const fromSearch = e.target === searchBox;
+    const idx = links.indexOf(document.activeElement);
+    if (!fromSearch && idx === -1) return;
+    e.preventDefault();
+    let next;
+    if (fromSearch) next = links[0];
+    else next = links[Math.min(links.length - 1, Math.max(0, idx + (e.key === 'ArrowDown' ? 1 : -1)))];
+    next?.focus();
+    next?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  });
+
+  // ── Deep links: #p=<slug> jumps to a card; clicking its № copies the link ──
+  const slugOf = c => (c.dataset.repo ? c.dataset.repo.split('/')[1]
+    : titleOf(c).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''));
+  let toast;
+  function showToast(msg) {
+    if (!toast) { toast = document.createElement('div'); toast.id = 'copy-toast'; document.body.appendChild(toast); }
+    toast.textContent = msg; toast.classList.add('show');
+    clearTimeout(showToast._t); showToast._t = setTimeout(() => toast.classList.remove('show'), 1600);
+  }
+  allCards.forEach(c => {
+    const num = c.querySelector('.c-num');
+    if (!num) return;
+    num.title = 'Copy a direct link to this card';
+    num.addEventListener('click', () => {
+      const url = location.origin + location.pathname + '#p=' + slugOf(c);
+      (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject())
+        .then(() => showToast('Link copied'), () => showToast(url));
+    });
+  });
+  const hashP = location.hash.match(/^#p=([\w-]+)/);
+  if (hashP) {
+    const target = allCards.find(c => slugOf(c) === hashP[1]);
+    if (target) setTimeout(() => {
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      target.classList.add('in', 'hl');
+    }, 350);
+  }
+
+  // ── Honest reachability: HEAD-ping each deploy (no-cors → network truth only;
+  //    an opaque response = the host answered, a network error/timeout = it didn't). ──
+  const R_KEY = 'nexus_reach_v1';
+  let rc = {};
+  try { const raw = sessionStorage.getItem(R_KEY); if (raw) rc = JSON.parse(raw); } catch {}
+  async function ping(url) {
+    const hit = rc[url];
+    if (hit && Date.now() - hit.t < 3600000) return hit.ok;
+    let ok = false;
+    try {
+      const ctl = new AbortController();
+      const t = setTimeout(() => ctl.abort(), 8000);
+      await fetch(url, { method: 'HEAD', mode: 'no-cors', signal: ctl.signal, cache: 'no-store' });
+      clearTimeout(t); ok = true;
+    } catch { ok = false; }
+    rc[url] = { ok, t: Date.now() };
+    try { sessionStorage.setItem(R_KEY, JSON.stringify(rc)); } catch {}
+    return ok;
+  }
+  async function reachAll() {
+    if (!navigator.onLine) return;
+    const jobs = allCards.map(c => async () => {
+      const a = c.querySelector('.c-links .lnk.lp[href^="http"]');
+      const meta = c.querySelector('[data-meta]');
+      if (!a || !meta) return;
+      const ok = await ping(a.href);
+      const s = document.createElement('span');
+      s.className = 'reach ' + (ok ? 'up' : 'down');
+      s.title = ok ? 'Deploy responded just now' : 'No response in 8s — may be blocked or down';
+      s.textContent = ok ? 'live' : 'no response';
+      meta.appendChild(s);
+    });
+    const pool = 4; let i = 0; // small pool — never 25 requests at once
+    await Promise.all(Array.from({ length: pool }, async () => { while (i < jobs.length) { const j = jobs[i++]; await j(); } }));
+  }
+  reachAll();
+})();
 </script>
 
 <!-- ══ SYED AURORA — living WebGL ambient engine (identity v2) ══ -->
