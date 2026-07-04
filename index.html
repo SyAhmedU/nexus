@@ -687,6 +687,37 @@
     .c-num { cursor: copy; }
     #copy-toast { position: fixed; bottom: 22px; left: 50%; transform: translate(-50%, 8px); background: var(--ink); color: var(--bg-2); padding: 9px 18px; border-radius: 999px; font: 600 12.5px/1 'Plus Jakarta Sans', system-ui, sans-serif; opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; z-index: 10001; }
     #copy-toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    /* ── syed-wave3: bespoke hero choreography + micro-interactions ──
+       Keyed off .sdyn-in (added by syed-dynamic once JS runs) so a no-JS
+       page renders static and visible; fully off under reduced motion. */
+    @media (prefers-reduced-motion: no-preference) {
+      @keyframes heroRise {
+        from { opacity: 0; transform: translateY(26px); filter: blur(6px); }
+        to   { opacity: 1; transform: none; filter: none; }
+      }
+      .sdyn-in .hero-pill  { animation: heroRise .6s  cubic-bezier(.22,1,.36,1) .08s both; }
+      .sdyn-in .hero-h     { animation: heroRise .75s cubic-bezier(.22,1,.36,1) .18s both; }
+      .sdyn-in .hero-p     { animation: heroRise .7s  cubic-bezier(.22,1,.36,1) .34s both; }
+      .sdyn-in .stats      { animation: heroRise .7s  cubic-bezier(.22,1,.36,1) .46s both; }
+      .sdyn-in .index-rule { animation: heroRise .7s  cubic-bezier(.22,1,.36,1) .60s both; }
+      .sdyn-in .filter-bar { animation: heroRise .6s  cubic-bezier(.22,1,.36,1) .70s both; }
+
+      /* living gradient ink on the Fraunces display words */
+      @keyframes gradDrift { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
+      .hero-h .grad, .hero-h .grad-cool {
+        background-size: 220% 220%;
+        animation: gradDrift 9s ease-in-out infinite alternate;
+      }
+
+      /* springy card micro-interactions */
+      .c-ico { transition: transform .35s cubic-bezier(.34,1.56,.64,1); }
+      .card:hover .c-ico { transform: scale(1.08) rotate(-4deg); }
+      .card::before { transition: height .25s ease, opacity .25s ease; }
+      .card:hover::before { height: 6px; opacity: 1; }
+      .stat { transition: transform .28s cubic-bezier(.22,1,.36,1), box-shadow .28s ease; }
+      .stat:hover { transform: translateY(-3px); box-shadow: var(--shadow-h); }
+    }
   </style>
 <!-- SYED-GATE · entry password, re-locks every load · injected by research-suite/tools/gate/inject.mjs -->
 <script>(function(){"use strict";
