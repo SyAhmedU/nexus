@@ -241,6 +241,20 @@
     .stats {
       display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 8px;
     }
+    /* SYED-CONCEPT · latest-push live line */
+    .latest-push {
+      display: inline-flex; align-items: center; gap: 8px; margin: 14px 0 0;
+      font-family: var(--font-mono); font-size: 12px; letter-spacing: .04em; color: var(--ink-2);
+    }
+    .latest-push b { color: var(--ink); font-weight: 600; }
+    .latest-push .lp-dot {
+      width: 7px; height: 7px; border-radius: 50%; flex: none;
+      background: linear-gradient(135deg, #FF9656, #F14575);
+      box-shadow: 0 0 0 3px rgba(241,69,117,.15);
+      animation: lp-breathe 2.6s ease-in-out infinite;
+    }
+    @keyframes lp-breathe { 0%,100% { box-shadow: 0 0 0 3px rgba(241,69,117,.14); } 50% { box-shadow: 0 0 0 6px rgba(241,69,117,.05); } }
+    @media (prefers-reduced-motion: reduce) { .latest-push .lp-dot { animation: none; } }
     .stat {
       display: flex; align-items: center; gap: 14px;
       padding: 14px 22px; border-radius: var(--r);
@@ -797,6 +811,7 @@ mk();if(document.readyState==="loading")document.addEventListener("DOMContentLoa
       <div class="stat"><span class="stat-n" id="statFresh">–</span><span class="stat-l">Updated<br>this week</span></div>
       <div class="stat"><span class="stat-n" id="statLive">23</span><span class="stat-l">Live &amp;<br>deployed</span></div>
     </div>
+    <p class="latest-push" id="latestPush" hidden></p>
   </section>
 
   <!-- Filter -->
@@ -1665,6 +1680,26 @@ mk();if(document.readyState==="loading")document.addEventListener("DOMContentLoa
       if (iso && (Date.now() - new Date(iso).getTime()) <= 7 * 86400000) seen.add(c.dataset.repo);
     });
     if (seen.size) el.textContent = seen.size;
+    updateLatestPush();
+  }
+
+  // SYED-CONCEPT · "the desk is warm" — latest real push, from the same
+  // cached pushed_at data (no extra API calls; no-fab: shown only when known).
+  function updateLatestPush() {
+    const line = document.getElementById('latestPush');
+    if (!line) return;
+    let best = null;
+    document.querySelectorAll('.card[data-repo]').forEach(c => {
+      const iso = c.dataset.pushed;
+      if (!iso) return;
+      const t = new Date(iso).getTime();
+      if (!best || t > best.t) best = { t, name: c.querySelector('.c-title')?.textContent?.trim() || c.dataset.repo.split('/')[1] };
+    });
+    if (!best) return;
+    const mins = Math.floor((Date.now() - best.t) / 60000);
+    const ago = mins < 60 ? `${Math.max(mins, 1)}m ago` : mins < 1440 ? `${Math.floor(mins / 60)}h ago` : `${Math.floor(mins / 1440)}d ago`;
+    line.innerHTML = `<span class="lp-dot" aria-hidden="true"></span>Latest push — <b>${best.name}</b> · ${ago}`;
+    line.hidden = false;
   }
 
   loadGitHubStatus();
