@@ -60,6 +60,13 @@ for (const repo of repos) {
   else console.log(`  ${repo}: skipped (not readable with this token)`);
 }
 
+// A revoked/expired token skips everything — fail loudly instead of
+// publishing an empty pulse over good data.
+if (counted.length === 0) {
+  console.error('No repos readable — token invalid or rate-limited. Keeping the existing pulse.json.');
+  process.exit(1);
+}
+
 const out = {
   generatedAt: new Date().toISOString(),
   windowDays: DAYS,
