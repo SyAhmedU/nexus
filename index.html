@@ -255,6 +255,27 @@
     }
     @keyframes lp-breathe { 0%,100% { box-shadow: 0 0 0 3px rgba(241,69,117,.14); } 50% { box-shadow: 0 0 0 6px rgba(241,69,117,.05); } }
     @media (prefers-reduced-motion: reduce) { .latest-push .lp-dot { animation: none; } }
+    /* SYED-CONCEPT · Index Observatory pulse strip */
+    .pulse-wrap { margin-top: 18px; max-width: 560px; }
+    .pulse-strip { display: flex; align-items: flex-end; gap: 2px; height: 44px; }
+    .pulse-strip i {
+      flex: 1; min-width: 2px; border-radius: 1.5px 1.5px 0 0;
+      background: linear-gradient(180deg, #F14575, #9270F4);
+      transform-origin: bottom;
+    }
+    .pulse-strip i.zero { background: var(--border); height: 2px !important; opacity: .6; }
+    .pulse-cap {
+      margin-top: 7px; font-family: var(--font-mono); font-size: 11px;
+      letter-spacing: .04em; color: var(--ink-2);
+    }
+    .pulse-cap b { color: var(--ink); font-weight: 600; }
+    @media (prefers-reduced-motion: no-preference) {
+      .pulse-strip i { animation: pulse-grow .5s cubic-bezier(.2,.7,.2,1) both; animation-delay: calc(var(--i) * 6ms); }
+      @keyframes pulse-grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+    }
+    /* Index Observatory: bodies glow by push recency (real pushed_at data) */
+    .card.orbit-hot { box-shadow: 0 0 0 1px rgba(241,69,117,.35), 0 8px 30px -10px rgba(241,69,117,.35); }
+    .card.orbit-warm { box-shadow: 0 0 0 1px rgba(146,112,244,.28), 0 8px 26px -12px rgba(146,112,244,.3); }
     .stat {
       display: flex; align-items: center; gap: 14px;
       padding: 14px 22px; border-radius: var(--r);
@@ -812,6 +833,13 @@ mk();if(document.readyState==="loading")document.addEventListener("DOMContentLoa
       <div class="stat"><span class="stat-n" id="statLive">23</span><span class="stat-l">Live &amp;<br>deployed</span></div>
     </div>
     <p class="latest-push" id="latestPush" hidden></p>
+    <!-- SYED-CONCEPT · Index Observatory: 90-day commit pulse across the whole
+         portfolio, generated server-side by scripts/build-pulse.mjs (daily
+         Action, token never ships to the client) — every bar a real day -->
+    <div class="pulse-wrap" id="pulseWrap" hidden>
+      <div class="pulse-strip" id="pulseStrip"></div>
+      <div class="pulse-cap" id="pulseCap"></div>
+    </div>
   </section>
 
   <!-- Filter -->
@@ -1114,7 +1142,7 @@ mk();if(document.readyState==="loading")document.addEventListener("DOMContentLoa
     </div>
 
     <!-- PaperCards -->
-    <div class="card g-warm" data-cats="ai research web" data-repo="syahmedu/paperpulse">
+    <div class="card g-warm" data-cats="ai research web" data-repo="syahmedu/papercards">
       <div class="c-top"><span class="c-ico">🔬</span><span class="c-num">#16</span></div>
       <div class="c-title">PaperCards</div>
       <div class="c-desc">Research papers as glanceable cards — drop a DOI or abstract and AI extracts the constructs, effects, and methodology into a construct graph, forest plot, and method pills. Or dissect a paper to depth: 13 evidence-grounded facets (theory, design, measures, analysis…), a facet × year timeline, and a synthesis matrix. Compare papers and explore their citation networks. <em>(Now includes the former Paper Dissection Workshop.)</em></div>
@@ -1681,6 +1709,14 @@ mk();if(document.readyState==="loading")document.addEventListener("DOMContentLoa
     });
     if (seen.size) el.textContent = seen.size;
     updateLatestPush();
+    // Index Observatory: bodies glow by push recency — hot ≤48h, warm ≤7d
+    document.querySelectorAll('.card[data-repo]').forEach(c => {
+      const iso = c.dataset.pushed;
+      if (!iso) return;
+      const age = Date.now() - new Date(iso).getTime();
+      c.classList.toggle('orbit-hot', age <= 2 * 86400000);
+      c.classList.toggle('orbit-warm', age > 2 * 86400000 && age <= 7 * 86400000);
+    });
   }
 
   // SYED-CONCEPT · "the desk is warm" — latest real push, from the same
@@ -1703,6 +1739,26 @@ mk();if(document.readyState==="loading")document.addEventListener("DOMContentLoa
   }
 
   loadGitHubStatus();
+
+  // SYED-CONCEPT · Index Observatory: render the 90-day commit pulse from the
+  // Action-generated JSON. Every bar is a real day; the caption states exactly
+  // what was counted and when.
+  fetch('data/pulse.json').then(r => (r.ok ? r.json() : null)).then(p => {
+    if (!p || !Array.isArray(p.days) || !p.days.length) return;
+    const wrap = document.getElementById('pulseWrap');
+    const strip = document.getElementById('pulseStrip');
+    const cap = document.getElementById('pulseCap');
+    if (!wrap || !strip || !cap) return;
+    const max = Math.max(...p.days.map(d => d.n), 1);
+    strip.innerHTML = p.days.map((d, i) => {
+      const h = d.n === 0 ? 2 : Math.max(4, Math.round((d.n / max) * 44));
+      return `<i class="${d.n === 0 ? 'zero' : ''}" style="height:${h}px;--i:${i}" title="${d.date} — ${d.n} commit${d.n === 1 ? '' : 's'}"></i>`;
+    }).join('');
+    strip.setAttribute('aria-label', `Commit activity, last ${p.windowDays} days: ${p.totalCommits} commits across ${p.reposCounted} repositories`);
+    const asOf = (p.generatedAt || '').slice(0, 10);
+    cap.innerHTML = `<b>${p.totalCommits.toLocaleString()}</b> commits · <b>${p.reposCounted}</b> repos · last ${p.windowDays} days${asOf ? ` · as of ${asOf}` : ''}${p.reposSkipped?.length ? ` · ${p.reposSkipped.length} private repo${p.reposSkipped.length === 1 ? '' : 's'} not counted` : ''}`;
+    wrap.hidden = false;
+  }).catch(() => {});
 
   // ── Sort by recent (toggle) ─────────────────────────────
   const sortBtn = document.getElementById('sortRecent');

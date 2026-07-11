@@ -1,0 +1,31 @@
+# SYED-CONCEPT · Index Observatory — refresh data/pulse.json daily.
+# The token stays server-side; the public page only ever sees the JSON.
+# Default GITHUB_TOKEN reads public repos; private ones are skipped (and
+# labelled in the JSON). To count private repos too, add a classic PAT with
+# `repo` read scope as the PULSE_TOKEN secret — the step below prefers it.
+name: pulse
+on:
+  schedule:
+    - cron: '20 1 * * *'   # daily 01:20 UTC
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  pulse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Build pulse.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.PULSE_TOKEN || secrets.GITHUB_TOKEN }}
+        run: node scripts/build-pulse.mjs
+      - name: Commit if changed
+        run: |
+          git config user.name "pulse-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/pulse.json
+          git diff --cached --quiet || git commit -m "pulse: refresh 90-day commit data"
+          git push
