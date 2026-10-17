@@ -439,10 +439,11 @@
     }
     .tag { background: var(--chip); color: var(--chip-ink); }
     .cat { color: #fff; }
+    html[data-theme="dark"] .cat { color: var(--bg); }  /* product-design paints pills a light accent in dark mode */
     .cp { background: var(--grad-iris); }
-    .cb { background: var(--grad-mint); }
+    .cb, .cw { background: var(--grad-mint); }  /* cw = "Web" on newer cards; was unstyled (white text on nothing) */
     .ct { background: var(--grad-pink); }
-    .ca { background: var(--grad-sun); }
+    .ca, .cc, .ce { background: var(--grad-sun); }
 
     .c-meta {
       display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
