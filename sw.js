@@ -3,9 +3,9 @@
 // onto a fresh cache. Scope is derived from this worker's own URL, so the same code
 // works at a domain root and under a /<project>/ path.
 const PREFIX = 'syed-pwa-nexus-';
-const CACHE = PREFIX + 'v1';
+const CACHE = PREFIX + 'v2-png-20261021';
 const ROOT = new URL('./', self.location).href;          // scope root (absolute)
-const SHELL = [ROOT, ROOT + 'manifest.webmanifest', ROOT + 'icon.svg'];
+const SHELL = [ROOT, ROOT + 'manifest.webmanifest', ROOT + 'icon.svg', ROOT + 'icon-192.png', ROOT + 'icon-512.png'];
 
 self.addEventListener('install', (e) => {
   e.waitUntil((async () => {
