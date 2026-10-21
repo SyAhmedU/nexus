@@ -803,7 +803,7 @@ mk();if(document.readyState==="loading")document.addEventListener("DOMContentLoa
   <span class="syed-project">Nexus · Portfolio</span>
   <nav class="syed-links">
     <a class="syed-link" href="https://syahmedu.github.io/journaltime/" target="_blank" rel="noopener">JournalTime</a>
-    <a class="syed-link" href="https://syahmedu.github.io/cadence/" target="_blank" rel="noopener">Cadence</a>
+    <a class="syed-link" href="https://lrl-cadence.vercel.app/" target="_blank" rel="noopener">Cadence</a>
     <a class="syed-link" href="https://scalescope.vercel.app" target="_blank" rel="noopener">ScaleScope</a>
     <a class="syed-link" href="https://ideabox-six.vercel.app" target="_blank" rel="noopener">IdeaBox</a>
     <a class="syed-link" href="https://career-compass-syahmedus-projects.vercel.app" target="_blank" rel="noopener">Career Compass</a>
@@ -1156,18 +1156,18 @@ mk();if(document.readyState==="loading")document.addEventListener("DOMContentLoa
     </div>
 
     <!-- FallacyScope -->
-    <div class="card g-warm" data-cats="research web education" data-repo="syahmedu/fallacyscope">
+    <div class="card g-warm" data-cats="research web education" data-repo="syahmedu/fallacyscope" data-private>
       <div class="c-top"><span class="c-ico">⚠️</span><span class="c-num">#19</span></div>
       <div class="c-title">FallacyScope</div>
       <div class="c-desc">A curated field guide to the paradoxes &amp; fallacies that bend social-science &amp; management research — Simpson's, ecological, base-rate, survivorship and more. Each entry: the trap, a real worked example, why it happens, how to avoid it, and where it bites in the research lifecycle. Every one hand-cited to a canonical source with a DOI link. Now <strong>87 entries</strong> (19 paradoxes · 27 fallacies · 41 biases); all are now <strong>embedded in ResearchFlow</strong> as a stage-aware resource. The front page is now a <strong>stream</strong>: one stone per trap at the research stage where it first appears, trailing to the last stage it affects.</div>
       <div class="c-tags">
         <span class="cat ct">Research</span>
         <span class="cat cw">Web</span>
-        <span class="tag">Single-file</span><span class="tag">Hand-cited</span><span class="tag">Paradoxes</span><span class="tag">Fallacies</span><span class="tag">→ embedded in ResearchFlow</span><span class="tag">Light/Dark</span><span class="tag">GitHub Pages</span>
+        <span class="tag">Single-file</span><span class="tag">Hand-cited</span><span class="tag">Paradoxes</span><span class="tag">Fallacies</span><span class="tag">→ embedded in ResearchFlow</span><span class="tag">Light/Dark</span><span class="tag">Vercel · private source</span>
       </div>
       <div class="c-meta" data-meta></div>
       <div class="c-links">
-        <a class="lnk lp" href="https://syahmedu.github.io/fallacyscope/" target="_blank" rel="noopener">Open ↗</a>
+        <a class="lnk lp" href="https://fallacyscope.vercel.app/" target="_blank" rel="noopener">Open ↗</a>
       </div>
     </div>
 
@@ -1431,7 +1431,7 @@ mk();if(document.readyState==="loading")document.addEventListener("DOMContentLoa
     </div>
 
     <!-- Cadence -->
-    <div class="card g-pink" data-cats="research" data-repo="syahmedu/cadence">
+    <div class="card g-pink" data-cats="research" data-repo="syahmedu/cadence" data-private>
       <div class="c-top"><span class="c-ico">🎵</span><span class="c-num">#10</span></div>
       <div class="c-title">Cadence</div>
       <div class="c-desc">Immersive survey tool for longitudinal research. One-question-at-a-time flow, milestone celebrations, keyboard shortcuts, and temporal wave tracking with participant codes.</div>
@@ -1441,7 +1441,7 @@ mk();if(document.readyState==="loading")document.addEventListener("DOMContentLoa
       </div>
       <div class="c-meta" data-meta></div>
       <div class="c-links">
-        <a class="lnk lp" href="https://syahmedu.github.io/cadence/" target="_blank" rel="noopener">Open ↗</a>
+        <a class="lnk lp" href="https://lrl-cadence.vercel.app/" target="_blank" rel="noopener">Open ↗</a>
       </div>
     </div>
 
@@ -1727,7 +1727,8 @@ mk();if(document.readyState==="loading")document.addEventListener("DOMContentLoa
   }
 
   async function loadGitHubStatus() {
-    const repoCards = Array.from(document.querySelectorAll('.card[data-repo]'));
+    // data-private: source repo is private (public repo at that name is just a redirect) → no GitHub badges.
+    const repoCards = Array.from(document.querySelectorAll('.card[data-repo]:not([data-private])'));
     const { data: cache, fresh } = loadCache();
     const updated = {};
 
