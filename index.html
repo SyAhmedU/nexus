@@ -1110,7 +1110,7 @@ mk();if(document.readyState==="loading")document.addEventListener("DOMContentLoa
     <div class="card g-warm" data-cats="research web data" data-repo="syahmedu/bookscope">
       <div class="c-top"><span class="c-ico">🔎</span><span class="c-num">#22</span></div>
       <div class="c-title">BookScope</div>
-      <div class="c-desc">A curated library of 284 academic reference books — roughly 128,000 source pages of research-methods, statistics, and social-science texts. Search available extracted text in the static Pagefind index, browse titles and authors, then open the source. Some books lack searchable text, and very long extracts are capped. Each book now opens an <strong>“Inside this book”</strong> panel — constructs and theories with page numbers, distinctive terms, its own table of contents and related books — plus a library-wide concept atlas. Search runs entirely client-side; metadata comes from real source files or provenance-labelled OpenLibrary matches. The book-length companion to Syed's Research Book. The hero is a <strong>grove</strong>: one tree per book, placed by year, trunk height = page count, colour = topic, and your search lights up the matching books.</div>
+      <div class="c-desc">A curated library of 284 academic reference books — roughly 128,000 source pages of research-methods, statistics, and social-science texts. Search available extracted text in the static Pagefind index, browse titles and authors, then open the source. Some books lack searchable text, and very long extracts are capped. Each book now opens an <strong>“Inside this book”</strong> panel — constructs and theories with page numbers, distinctive terms, its own table of contents and related books — plus a library-wide concept atlas. Search runs entirely client-side; metadata comes from real source files or provenance-labelled OpenLibrary matches. The book-length companion to Research Book. The hero is a <strong>grove</strong>: one tree per book, placed by year, trunk height = page count, colour = topic, and your search lights up the matching books.</div>
       <div class="c-tags">
         <span class="cat ct">Research</span>
         <span class="cat cw">Web</span>
@@ -1122,10 +1122,10 @@ mk();if(document.readyState==="loading")document.addEventListener("DOMContentLoa
       </div>
     </div>
 
-    <!-- Syed's Research Book -->
+    <!-- Research Book -->
     <div class="card g-warm" data-cats="research web data" data-repo="syahmedu/syeds-research-book" data-private>
       <div class="c-top"><span class="c-ico">📚</span><span class="c-num">#21</span></div>
-      <div class="c-title">Syed's Research Book</div>
+      <div class="c-title">Research Book</div>
         <div class="c-desc">A browsable, time-flowed view of a 24-month systematic-review corpus — 9,388 hand-coded papers across 167 management / organizational-behavior constructs. Alongside 79,517 recent OpenAlex records, a separate <strong>all-years management import adds 1,863,750 real records, 1,165,306 provider abstracts, and 58,487,941 observed reference links</strong>. All enabled tiers total 1,952,655 records. The official OpenAlex <strong>2026-09-23 release traversal</strong> and Crossref source traversal are complete for the recorded selection; missing titles and unresolved reference identities remain explicit. This is not universal literature or citation coverage. Source selection uses 2025 highest-category CiteScore rankings. <strong>Conference series, book series, trade publications, and journals stay separate</strong>. Explore the 408-construct co-occurrence map, construct trends and Term Trends. Hand coding stays intact; imported tags, extracted phrases and catalog crosswalks are machine-matched and verify-badged. The full snapshot is hosted on Vercel; the older GitHub Pages version remains available separately.</div>
       <div class="c-tags">
         <span class="cat ct">Research</span>
@@ -1290,7 +1290,7 @@ mk();if(document.readyState==="loading")document.addEventListener("DOMContentLoa
     <div class="card g-pink" data-cats="ai research" data-repo="syahmedu/wordmap">
       <div class="c-top"><span class="c-ico">🌐</span><span class="c-num">#04</span></div>
       <div class="c-title">WordMap</div>
-      <div class="c-desc">↗ <strong>Folded into the Library</strong> — Wordmap's animated 50-year term treemap (425 OpenAlex social-science terms, 1970–2054) is now the <strong>Term Trends</strong> view inside Syed's Research Book. The standalone URL redirects there.</div>
+      <div class="c-desc">↗ <strong>Folded into the Library</strong> — Wordmap's animated 50-year term treemap (425 OpenAlex social-science terms, 1970–2054) is now the <strong>Term Trends</strong> view inside Research Book. The standalone URL redirects there.</div>
       <div class="c-tags">
         <span class="cat ct">Research</span>
         <span class="cat cw">Web</span>
@@ -1928,7 +1928,7 @@ mk();if(document.readyState==="loading")document.addEventListener("DOMContentLoa
   const GROUPS = [
     ['The research suite', 'one thread — read, frame, measure, collect, analyze, write, publish', [
       'Throughline Studio', 'Throughline — Research Suite', 'PaperCards', 'ResearchFlow', 'TheoryScope',
-      'ScaleScope', 'ToolsScope', 'JournalTime', "Syed's Research Book", 'BookScope', 'ScholarScope',
+      'ScaleScope', 'ToolsScope', 'JournalTime', "Research Book", 'BookScope', 'ScholarScope',
       'FallacyScope', 'Cadence', 'Journal Timelines', 'Throughline CS', 'Paper Dissection Workshop', 'WordMap']],
     ['Campus & career', 'the FACE Prep @ AMET world', [
       'FACE Prep Campus', 'TaskFlow', 'Timetable Generator', 'Career Compass', 'Callback', 'Greenroom', 'KarmaMap']],
@@ -2003,7 +2003,7 @@ mk();if(document.readyState==="loading")document.addEventListener("DOMContentLoa
   });
 
   // ── "★ Start here" on the three front doors ──
-  ['Throughline Studio', "Syed's Research Book", 'FACE Prep Campus'].forEach(t => {
+  ['Throughline Studio', "Research Book", 'FACE Prep Campus'].forEach(t => {
     const c = allCards.find(x => titleOf(x) === t);
     const top = c?.querySelector('.c-top');
     if (top) {

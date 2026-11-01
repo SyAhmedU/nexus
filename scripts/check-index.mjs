@@ -18,7 +18,7 @@ const ALIAS = {
   scalebase: 'ScaleScope',
   paperpulse: 'PaperCards',
   'research-suite': 'Throughline — Research Suite',
-  'syeds-research-book': "Syed's Research Book",
+  'syeds-research-book': "Research Book",
   'paper-dissection': 'Paper Dissection Workshop',
   wordmap: 'WordMap',
   karmamap: 'KarmaMap',
